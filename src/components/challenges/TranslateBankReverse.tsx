@@ -11,8 +11,8 @@ import { StyleSheet, Text, View } from "react-native";
 
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 import { play } from "@/audio/player";
-import { Button, PillLabel, Tile } from "@/components/ui";
-import { colors, spacing, type } from "@/design/tokens";
+import { AnswerLines, Button, ChallengeHeader, Tile } from "@/components/ui";
+import { colors, layout, spacing, type } from "@/design/tokens";
 
 export type TranslateBankReverseChallenge = Extract<
   Challenge,
@@ -72,35 +72,40 @@ export default function TranslateBankReverse({ challenge, onSubmit }: TranslateB
 
   return (
     <View style={styles.container}>
-      <PillLabel variant="hard-exercise" />
+      <View style={styles.content}>
+        <ChallengeHeader title="Translate this sentence" pill="hard-exercise" />
 
-      <Text style={styles.prompt}>{promptText}</Text>
+        <Text style={styles.prompt}>{promptText}</Text>
 
-      <View style={styles.answerArea} testID="answer-area">
-        {selectedItems.map((item) => (
-          <Tile
-            key={item.id}
-            label={item.word}
-            state="selected"
-            onPress={() => handleAnswerTap(item.id)}
-            onAudioTap={() => play(item.word)}
-          />
-        ))}
-      </View>
+        <View style={styles.answerWrap}>
+          <AnswerLines count={2} style={styles.answerLines} />
+          <View style={styles.answerArea} testID="answer-area">
+            {selectedItems.map((item) => (
+              <Tile
+                key={item.id}
+                label={item.word}
+                state="selected"
+                onPress={() => handleAnswerTap(item.id)}
+                onAudioTap={() => play(item.word)}
+              />
+            ))}
+          </View>
+        </View>
 
-      <View style={styles.wordBank} testID="word-bank">
-        {bankItems.map((item) => {
-          const isUsed = selectedIds.includes(item.id);
-          return (
-            <Tile
-              key={item.id}
-              label={item.word}
-              state={isUsed ? "ghost" : "default"}
-              onPress={() => handleBankTap(item)}
-              onAudioTap={() => play(item.word)}
-            />
-          );
-        })}
+        <View style={styles.wordBank} testID="word-bank">
+          {bankItems.map((item) => {
+            const isUsed = selectedIds.includes(item.id);
+            return (
+              <Tile
+                key={item.id}
+                label={item.word}
+                state={isUsed ? "ghost" : "default"}
+                onPress={() => handleBankTap(item)}
+                onAudioTap={() => play(item.word)}
+              />
+            );
+          })}
+        </View>
       </View>
 
       <Button
@@ -117,10 +122,25 @@ const styles = StyleSheet.create({
   container: {
     gap: spacing.lg,
   },
+  content: {
+    gap: spacing.lg,
+    paddingHorizontal: layout.screenPaddingH,
+  },
   prompt: {
     fontFamily: type.title.fontFamily,
     fontSize: type.title.fontSize,
     color: colors.textDark,
+  },
+  answerWrap: {
+    justifyContent: "center",
+  },
+  answerLines: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: "center",
   },
   answerArea: {
     flexDirection: "row",
