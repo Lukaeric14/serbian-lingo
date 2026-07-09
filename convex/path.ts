@@ -3,12 +3,14 @@
 //
 // Lessons unlock strictly sequentially in GLOBAL order across all units (not
 // per-unit): walk every unit in `order`, and within each unit every lesson in
-// `order`, tracking the first lesson that does NOT have a completions row for
-// this profile. That lesson (and only that one) is "active"; everything
-// before it is "completed"; everything after it is "locked".
+// `order`, tracking the first lesson that hasn't reached LESSON_REQUIRED_ROUNDS
+// completions rows for this profile yet (crown-level-style repetition — one pass
+// isn't enough). That lesson (and only that one) is "active"; everything before
+// it is "completed"; everything after it is "locked".
 
 import { query } from "./_generated/server";
 import { v } from "convex/values";
+import { LESSON_REQUIRED_ROUNDS } from "./progression";
 
 export const getPath = query({
   args: { profileId: v.id("profiles") },
@@ -18,12 +20,16 @@ export const getPath = query({
       .withIndex("by_order")
       .collect();
 
-    // All of this profile's completions, indexed by lessonSlug for O(1) lookup below.
+    // All of this profile's completions, counted per lessonSlug — a lesson is
+    // only "done" once its round count reaches LESSON_REQUIRED_ROUNDS.
     const completions = await ctx.db
       .query("completions")
       .withIndex("by_profile_lesson", (q) => q.eq("profileId", profileId))
       .collect();
-    const completedLessonSlugs = new Set(completions.map((c) => c.lessonSlug));
+    const roundsBySlug = new Map<string, number>();
+    for (const c of completions) {
+      roundsBySlug.set(c.lessonSlug, (roundsBySlug.get(c.lessonSlug) ?? 0) + 1);
+    }
 
     // First pass: has the global "active" lesson been assigned yet?
     let activeAssigned = false;
@@ -38,8 +44,9 @@ export const getPath = query({
       const lessonsWithStatus = lessons
         .sort((a, b) => a.order - b.order)
         .map((lesson) => {
+          const roundsCompleted = roundsBySlug.get(lesson.slug) ?? 0;
           let status: "completed" | "active" | "locked";
-          if (completedLessonSlugs.has(lesson.slug)) {
+          if (roundsCompleted >= LESSON_REQUIRED_ROUNDS) {
             status = "completed";
           } else if (!activeAssigned) {
             status = "active";
@@ -52,6 +59,8 @@ export const getPath = query({
             order: lesson.order,
             kind: lesson.kind,
             status,
+            roundsCompleted,
+            roundsRequired: LESSON_REQUIRED_ROUNDS,
           };
         });
 

@@ -14,6 +14,7 @@ import type * as completions from "../completions.js";
 import type * as lessons from "../lessons.js";
 import type * as path from "../path.js";
 import type * as profiles from "../profiles.js";
+import type * as progression from "../progression.js";
 import type * as units from "../units.js";
 
 import type {
@@ -29,6 +30,7 @@ declare const fullApi: ApiFromModules<{
   lessons: typeof lessons;
   path: typeof path;
   profiles: typeof profiles;
+  progression: typeof progression;
   units: typeof units;
 }>;
 

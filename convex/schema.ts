@@ -84,9 +84,18 @@ export default defineSchema({
     introducedInUnit: v.string(), // unit slug
   }).index("by_slug", ["slug"]),
 
+  // One row PER ROUND — a lesson can (and per convex/progression.ts's
+  // LESSON_REQUIRED_ROUNDS, must) be completed multiple times before the next
+  // lesson unlocks, like Duolingo's crown levels. `round` is this profile's Nth
+  // completion of this exact lessonSlug (1-indexed); getPath/recordCompletion
+  // both derive progress by COUNTING ROWS per lessonSlug, never by reading this
+  // field's value, so it's optional purely for backward compatibility with rows
+  // inserted before this field existed (real completions already recorded during
+  // testing) — never omitted on a newly-inserted row.
   completions: defineTable({
     profileId: v.id("profiles"),
     lessonSlug: v.string(),
+    round: v.optional(v.number()),
     xpEarned: v.number(),
     accuracy: v.number(),
     durationSec: v.number(),

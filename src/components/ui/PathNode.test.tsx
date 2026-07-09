@@ -102,4 +102,61 @@ describe("PathNode", () => {
       : wrapper.props.style;
     expect(flatStyle.shadowColor).toBe(glow.green.shadowColor);
   });
+
+  // --- Crown-level-style round progress pips ---
+
+  it("renders round-progress pips for an active lesson node with roundsRequired > 1", async () => {
+    const { getByTestId } = await render(
+      <PathNode
+        state="active"
+        kind="lesson"
+        color={colors.green}
+        roundsCompleted={1}
+        roundsRequired={3}
+      />
+    );
+    expect(getByTestId("path-node-pips")).toBeTruthy();
+  });
+
+  it("does not render pips when roundsRequired is 1 (or absent)", async () => {
+    const withOneRequired = await render(
+      <PathNode state="active" kind="lesson" color={colors.green} roundsCompleted={0} roundsRequired={1} />
+    );
+    expect(withOneRequired.queryByTestId("path-node-pips")).toBeNull();
+
+    const withoutProps = await render(<PathNode state="active" kind="lesson" color={colors.green} />);
+    expect(withoutProps.queryByTestId("path-node-pips")).toBeNull();
+  });
+
+  it("does not render pips on completed or locked nodes, even with roundsRequired > 1", async () => {
+    const completed = await render(
+      <PathNode state="completed" kind="lesson" color={colors.green} roundsCompleted={3} roundsRequired={3} />
+    );
+    expect(completed.queryByTestId("path-node-pips")).toBeNull();
+
+    const locked = await render(
+      <PathNode state="locked" kind="lesson" roundsCompleted={0} roundsRequired={3} />
+    );
+    expect(locked.queryByTestId("path-node-pips")).toBeNull();
+  });
+
+  it("does not render pips on non-lesson kinds (chest/practice)", async () => {
+    const chest = await render(
+      <PathNode state="active" kind="chest" color={colors.purple} roundsCompleted={1} roundsRequired={3} />
+    );
+    expect(chest.queryByTestId("path-node-pips")).toBeNull();
+
+    const practice = await render(
+      <PathNode state="active" kind="practice" color={colors.blue} roundsCompleted={1} roundsRequired={3} />
+    );
+    expect(practice.queryByTestId("path-node-pips")).toBeNull();
+  });
+
+  it("renders exactly roundsRequired pips", async () => {
+    const { getByTestId } = await render(
+      <PathNode state="active" kind="lesson" color={colors.green} roundsCompleted={2} roundsRequired={5} />
+    );
+    const pipsRow = getByTestId("path-node-pips");
+    expect(pipsRow.children).toHaveLength(5);
+  });
 });

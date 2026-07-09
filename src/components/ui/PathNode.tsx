@@ -25,6 +25,11 @@ export interface PathNodeProps {
   style?: StyleProp<ViewStyle>;
   /** Accessible label override; defaults to a sensible description built from state/kind. */
   accessibilityLabel?: string;
+  /** Crown-level-style round progress (convex/progression.ts) — how many of the
+   * required rounds this lesson has completed. Only rendered as pips when the
+   * node is a "lesson" kind, "active", and roundsRequired > 1. */
+  roundsCompleted?: number;
+  roundsRequired?: number;
 }
 
 const NODE_SIZE = 70;
@@ -117,6 +122,8 @@ export function PathNode({
   onPress,
   style,
   accessibilityLabel,
+  roundsCompleted,
+  roundsRequired,
 }: PathNodeProps) {
   const pulse = useRef(new Animated.Value(0)).current;
 
@@ -159,44 +166,66 @@ export function PathNode({
   const label =
     accessibilityLabel ?? `${kind} node, ${state}${disabled ? ", locked" : ""}`;
 
+  // Crown-level-style round progress (convex/progression.ts): only meaningful for
+  // the currently-active lesson node with more than one required round — a
+  // completed node's gold checkmark already reads as "fully done", and a locked
+  // node has no progress to show yet.
+  const showPips =
+    kind === "lesson" && state === "active" && roundsRequired !== undefined && roundsRequired > 1;
+
   return (
-    <View style={[styles.wrapper, nodeGlow, style]} testID="path-node-wrapper">
-      {state === "active" ? (
-        <Animated.View
-          pointerEvents="none"
-          style={[
-            styles.pulseRing,
+    <View style={styles.outer}>
+      <View style={[styles.wrapper, nodeGlow, style]} testID="path-node-wrapper">
+        {state === "active" ? (
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              styles.pulseRing,
+              {
+                borderColor: fill,
+                opacity: ringOpacity,
+                transform: [{ scale: ringScale }],
+              },
+            ]}
+            testID="path-node-pulse-ring"
+          />
+        ) : null}
+        <Pressable
+          onPress={onPress}
+          disabled={disabled}
+          accessibilityRole="button"
+          accessibilityLabel={label}
+          accessibilityState={{ disabled }}
+          hitSlop={spacingHitSlop}
+          style={({ pressed }) => [
+            styles.node,
             {
-              borderColor: fill,
-              opacity: ringOpacity,
-              transform: [{ scale: ringScale }],
+              backgroundColor: fill,
+              borderBottomColor: edge,
             },
+            pressed && !disabled ? styles.pressed : null,
           ]}
-          testID="path-node-pulse-ring"
-        />
+        >
+          {/* Glossy inner highlight — a soft light patch toward the top-left,
+              like a coin/token catching light — reads as embossed/raised
+              rather than a flat color fill. */}
+          <View pointerEvents="none" style={styles.highlight} />
+          <IconFor kind={kind} state={state} iconColor={iconColor} />
+        </Pressable>
+      </View>
+      {showPips ? (
+        <View style={styles.pipsRow} testID="path-node-pips">
+          {Array.from({ length: roundsRequired }).map((_, i) => (
+            <View
+              key={i}
+              style={[
+                styles.pip,
+                { backgroundColor: i < (roundsCompleted ?? 0) ? fill : colors.border },
+              ]}
+            />
+          ))}
+        </View>
       ) : null}
-      <Pressable
-        onPress={onPress}
-        disabled={disabled}
-        accessibilityRole="button"
-        accessibilityLabel={label}
-        accessibilityState={{ disabled }}
-        hitSlop={spacingHitSlop}
-        style={({ pressed }) => [
-          styles.node,
-          {
-            backgroundColor: fill,
-            borderBottomColor: edge,
-          },
-          pressed && !disabled ? styles.pressed : null,
-        ]}
-      >
-        {/* Glossy inner highlight — a soft light patch toward the top-left,
-            like a coin/token catching light — reads as embossed/raised
-            rather than a flat color fill. */}
-        <View pointerEvents="none" style={styles.highlight} />
-        <IconFor kind={kind} state={state} iconColor={iconColor} />
-      </Pressable>
     </View>
   );
 }
@@ -204,11 +233,24 @@ export function PathNode({
 const spacingHitSlop = { top: 8, bottom: 8, left: 8, right: 8 };
 
 const styles = StyleSheet.create({
+  outer: {
+    alignItems: "center",
+  },
   wrapper: {
     width: RING_SIZE,
     height: RING_SIZE,
     alignItems: "center",
     justifyContent: "center",
+  },
+  pipsRow: {
+    flexDirection: "row",
+    gap: 5,
+    marginTop: 2,
+  },
+  pip: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
   },
   node: {
     width: NODE_SIZE,

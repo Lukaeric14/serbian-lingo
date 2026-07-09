@@ -1,13 +1,21 @@
-// Records a lesson completion for a profile: idempotent per profileId+lessonSlug,
-// accumulates XP, and updates the daily-streak state. Contract per the coordinating
-// loop's shared-contract spec for "lesson-complete-and-streak".
+// Records ONE ROUND of a lesson completion for a profile: accumulates XP and
+// updates the daily-streak state, and reports round progress toward
+// LESSON_REQUIRED_ROUNDS (convex/progression.ts) so the client can tell "one more
+// round to go" apart from "lesson (all rounds) complete". Contract per the
+// coordinating loop's shared-contract spec for "lesson-complete-and-streak",
+// extended for crown-level-style repetition.
 //
-// Idempotency matters because the client may replay this call (e.g. a flaky network
-// retry, or the user backgrounding the app mid-navigation right after the mutation
-// fires) — a replay must never double-count XP or double-bump the streak.
+// This is intentionally NOT idempotent-by-lessonSlug anymore: doing the same
+// lesson again is now a legitimate, expected action (round 2, round 3, ...), not
+// a replay to suppress. The client's own in-flight guard (lesson-host's
+// `completing` state) is what prevents an accidental double-submit of the SAME
+// round; a rare double-count from a genuine network retry is an acceptable
+// tradeoff for a single-family personal app, not something worth a heavier
+// dedupe mechanism.
 
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { LESSON_REQUIRED_ROUNDS } from "./progression";
 
 /** YYYY-MM-DD in device-agnostic UTC — matches profiles.lastActiveDay / xpEvents.day. */
 function todayString(): string {
@@ -37,30 +45,20 @@ export const recordCompletion = mutation({
       throw new Error(`recordCompletion: no profile found with id "${profileId}"`);
     }
 
-    // --- idempotency: a completions row already exists for this profile+lesson ---
-    const existing = await ctx.db
+    const priorRounds = await ctx.db
       .query("completions")
       .withIndex("by_profile_lesson", (q) =>
         q.eq("profileId", profileId).eq("lessonSlug", lessonSlug),
       )
-      .unique();
-
-    if (existing) {
-      // Replay — do nothing (no double-count, no double streak bump). Report the
-      // CURRENT state so the caller still gets a coherent response, but streakIsNew
-      // is always false on a replay since this call did not just change anything.
-      return {
-        xpEarned: 0,
-        newStreak: profile.currentStreak,
-        streakIsNew: false,
-      };
-    }
+      .collect();
+    const round = priorRounds.length + 1;
 
     const today = todayString();
 
     await ctx.db.insert("completions", {
       profileId,
       lessonSlug,
+      round,
       xpEarned,
       accuracy,
       durationSec,
@@ -100,6 +98,9 @@ export const recordCompletion = mutation({
       xpEarned,
       newStreak,
       streakIsNew,
+      round,
+      roundsRequired: LESSON_REQUIRED_ROUNDS,
+      lessonFullyComplete: round >= LESSON_REQUIRED_ROUNDS,
     };
   },
 });

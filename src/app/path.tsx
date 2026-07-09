@@ -111,6 +111,8 @@ export default function PathScreen() {
                     state={lesson.status}
                     kind={lesson.kind === "chest" ? "chest" : "lesson"}
                     color={unit.color}
+                    roundsCompleted={lesson.roundsCompleted}
+                    roundsRequired={lesson.roundsRequired}
                     onPress={
                       lesson.status === "active"
                         ? () => router.push(`/lesson/${lesson.slug}`)

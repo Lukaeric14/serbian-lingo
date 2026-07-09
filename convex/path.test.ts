@@ -1,11 +1,14 @@
 // Proves convex/path.ts's getPath query: lessons unlock strictly sequentially in
-// GLOBAL order across all units, driven by completions rows. Follows the same
-// convex-test + hand-built `modules` map pattern as convex/units.test.ts (see that
-// file's header comment for why: import.meta.glob isn't available under Jest/Babel).
+// GLOBAL order across all units, gated on LESSON_REQUIRED_ROUNDS completions rows per
+// lesson (crown-level-style repetition — one pass through a lesson isn't enough to
+// unlock the next one). Follows the same convex-test + hand-built `modules` map
+// pattern as convex/units.test.ts (see that file's header comment for why:
+// import.meta.glob isn't available under Jest/Babel).
 
 import { convexTest } from "convex-test";
 import { anyApi } from "convex/server";
 import schema from "./schema";
+import { LESSON_REQUIRED_ROUNDS } from "./progression";
 
 const api = anyApi as unknown as {
   path: {
@@ -16,6 +19,7 @@ const api = anyApi as unknown as {
 const modules = {
   "schema.ts": () => Promise.resolve(require("./schema")),
   "challengeText.ts": () => Promise.resolve(require("./challengeText")),
+  "progression.ts": () => Promise.resolve(require("./progression")),
   "path.ts": () => Promise.resolve(require("./path")),
   "_generated/server.js": () => Promise.resolve(require("./_generated/server")),
 };
@@ -68,21 +72,31 @@ async function seedUnitsAndLessons(t: ReturnType<typeof makeT>) {
   });
 }
 
-async function insertCompletion(
+/** Inserts one completions row (one round) for lessonSlug, at the next round number. */
+async function insertRound(
   t: ReturnType<typeof makeT>,
   profileId: any,
   lessonSlug: string,
+  round: number,
 ) {
   await t.run(async (ctx) => {
     await ctx.db.insert("completions", {
       profileId,
       lessonSlug,
+      round,
       xpEarned: 10,
       accuracy: 1,
       durationSec: 60,
       day: "2026-07-09",
     });
   });
+}
+
+/** Inserts LESSON_REQUIRED_ROUNDS rows for lessonSlug — fully completes it. */
+async function completeLesson(t: ReturnType<typeof makeT>, profileId: any, lessonSlug: string) {
+  for (let round = 1; round <= LESSON_REQUIRED_ROUNDS; round++) {
+    await insertRound(t, profileId, lessonSlug, round);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -104,46 +118,78 @@ test("with zero completions, the first lesson is active and the rest are locked"
   const allLessons = path.flatMap((u: any) => u.lessons);
   expect(allLessons).toHaveLength(4);
 
-  expect(allLessons[0]).toMatchObject({ slug: "u1-l1", status: "active" });
+  expect(allLessons[0]).toMatchObject({ slug: "u1-l1", status: "active", roundsCompleted: 0 });
   expect(allLessons[1]).toMatchObject({ slug: "u1-l2", status: "locked" });
   expect(allLessons[2]).toMatchObject({ slug: "u2-l1", status: "locked" });
   expect(allLessons[3]).toMatchObject({ slug: "u2-l2", status: "locked" });
+  expect(allLessons.every((l: any) => l.roundsRequired === LESSON_REQUIRED_ROUNDS)).toBe(true);
 });
 
 // ---------------------------------------------------------------------------
-// 2. After recording completions, later lessons unlock in strict global order —
-//    including crossing a unit boundary (u1-l2 completed -> u2-l1 becomes active).
+// 2. A lesson with SOME but not all required rounds stays "active" (not
+//    "completed", not "locked"), reporting how many rounds are done so far.
 // ---------------------------------------------------------------------------
 
-test("completed lessons unlock the next lesson in global order, across unit boundaries", async () => {
+test("a lesson with fewer than the required rounds stays active, not completed", async () => {
   const t = makeT();
   await seedUnitsAndLessons(t);
   const profileId = await makeProfile(t);
 
-  await insertCompletion(t, profileId, "u1-l1");
-  await insertCompletion(t, profileId, "u1-l2");
+  // One round short of LESSON_REQUIRED_ROUNDS.
+  for (let round = 1; round < LESSON_REQUIRED_ROUNDS; round++) {
+    await insertRound(t, profileId, "u1-l1", round);
+  }
 
   const path = await t.query(api.path.getPath, { profileId });
   const allLessons = path.flatMap((u: any) => u.lessons);
 
-  expect(allLessons[0]).toMatchObject({ slug: "u1-l1", status: "completed" });
+  expect(allLessons[0]).toMatchObject({
+    slug: "u1-l1",
+    status: "active",
+    roundsCompleted: LESSON_REQUIRED_ROUNDS - 1,
+  });
+  // The next lesson must stay locked — u1-l1 hasn't unlocked it yet.
+  expect(allLessons[1]).toMatchObject({ slug: "u1-l2", status: "locked" });
+});
+
+// ---------------------------------------------------------------------------
+// 3. Reaching LESSON_REQUIRED_ROUNDS on a lesson unlocks the next lesson in
+//    global order — including crossing a unit boundary.
+// ---------------------------------------------------------------------------
+
+test("reaching the required rounds unlocks the next lesson in global order, across unit boundaries", async () => {
+  const t = makeT();
+  await seedUnitsAndLessons(t);
+  const profileId = await makeProfile(t);
+
+  await completeLesson(t, profileId, "u1-l1");
+  await completeLesson(t, profileId, "u1-l2");
+
+  const path = await t.query(api.path.getPath, { profileId });
+  const allLessons = path.flatMap((u: any) => u.lessons);
+
+  expect(allLessons[0]).toMatchObject({
+    slug: "u1-l1",
+    status: "completed",
+    roundsCompleted: LESSON_REQUIRED_ROUNDS,
+  });
   expect(allLessons[1]).toMatchObject({ slug: "u1-l2", status: "completed" });
   // Crossing into unit 2: the next lesson in global order is now active.
-  expect(allLessons[2]).toMatchObject({ slug: "u2-l1", status: "active" });
+  expect(allLessons[2]).toMatchObject({ slug: "u2-l1", status: "active", roundsCompleted: 0 });
   expect(allLessons[3]).toMatchObject({ slug: "u2-l2", status: "locked" });
 });
 
 // ---------------------------------------------------------------------------
-// 3. Completing every lesson leaves no "active" node (all completed).
+// 4. Fully completing every lesson leaves no "active" node (all completed).
 // ---------------------------------------------------------------------------
 
-test("completing every lesson leaves all lessons completed with no active node", async () => {
+test("fully completing every lesson leaves all lessons completed with no active node", async () => {
   const t = makeT();
   await seedUnitsAndLessons(t);
   const profileId = await makeProfile(t);
 
   for (const slug of ["u1-l1", "u1-l2", "u2-l1", "u2-l2"]) {
-    await insertCompletion(t, profileId, slug);
+    await completeLesson(t, profileId, slug);
   }
 
   const path = await t.query(api.path.getPath, { profileId });
@@ -153,7 +199,7 @@ test("completing every lesson leaves all lessons completed with no active node",
 });
 
 // ---------------------------------------------------------------------------
-// 4. A different profile's completions don't affect this profile's path (progress
+// 5. A different profile's completions don't affect this profile's path (progress
 //    is per-profile, not global).
 // ---------------------------------------------------------------------------
 
@@ -163,7 +209,7 @@ test("completions are scoped per-profile", async () => {
   const profileA = await makeProfile(t);
   const profileB = await makeProfile(t);
 
-  await insertCompletion(t, profileA, "u1-l1");
+  await completeLesson(t, profileA, "u1-l1");
 
   const pathA = await t.query(api.path.getPath, { profileId: profileA });
   const pathB = await t.query(api.path.getPath, { profileId: profileB });
@@ -175,6 +221,6 @@ test("completions are scoped per-profile", async () => {
   expect(lessonsA[1]).toMatchObject({ slug: "u1-l2", status: "active" });
 
   // Profile B has no completions at all — its own first lesson is active.
-  expect(lessonsB[0]).toMatchObject({ slug: "u1-l1", status: "active" });
+  expect(lessonsB[0]).toMatchObject({ slug: "u1-l1", status: "active", roundsCompleted: 0 });
   expect(lessonsB[1]).toMatchObject({ slug: "u1-l2", status: "locked" });
 });

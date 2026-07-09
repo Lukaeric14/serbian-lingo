@@ -39,17 +39,30 @@ export default function LessonCompleteScreen() {
     // has the fresh streak count on hand (from recordCompletion's `newStreak`) and
     // the /streak screen needs a count to render — forwarded through if present.
     streak?: string;
+    // Crown-level-style repetition (convex/progression.ts): which round of the
+    // lesson this was, and whether that was the LAST required round — drives
+    // whether the heading reads "lesson complete" or "keep practicing".
+    round?: string;
+    roundsRequired?: string;
+    lessonFullyComplete?: string;
   }>();
 
   const xpEarned = Number(params.xpEarned ?? 0);
   const durationSec = Number(params.durationSec ?? 0);
   const accuracy = Number(params.accuracy ?? 0);
   const streakIsNew = params.streakIsNew === "true";
+  const round = params.round ? Number(params.round) : null;
+  const roundsRequired = params.roundsRequired ? Number(params.roundsRequired) : null;
+  const lessonFullyComplete = params.lessonFullyComplete !== "false";
 
   const accuracyPercent = Math.round(
     (accuracy > 1 ? accuracy : accuracy * 100),
   );
   const accuracyLabel = accuracyPercent >= 100 ? "PERFECT!" : "GREAT";
+
+  const heading = lessonFullyComplete
+    ? "Lesson complete!"
+    : `Nice practice! (${round}/${roundsRequired})`;
 
   const handleContinue = () => {
     if (streakIsNew) {
@@ -69,7 +82,7 @@ export default function LessonCompleteScreen() {
           <View style={styles.starGlow}>
             <StarIcon size={72} color={colors.gold} />
           </View>
-          <Text style={styles.heading}>Lesson complete!</Text>
+          <Text style={styles.heading}>{heading}</Text>
         </View>
 
         <View style={styles.statsRow}>

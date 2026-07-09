@@ -21,6 +21,7 @@ import type { Id } from "../../../convex/_generated/dataModel";
 import { getSelectedProfileId } from "@/lib/selected-profile";
 import { preload } from "@/audio/player";
 import { playCorrectSound, playIncorrectSound } from "@/audio/feedbackSounds";
+import { shuffle } from "@/lib/shuffle";
 import { LessonQueue } from "@/engine/queue";
 import { gradeChallenge } from "@/engine/grading";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
@@ -157,7 +158,10 @@ export default function LessonHost() {
 
   useEffect(() => {
     if (challenges && challenges.length > 0 && !queueRef.current) {
-      const ordered = [...challenges].sort((a, b) => a.order - b.order);
+      // Shuffled (not the fixed content order) so repeat rounds of the same
+      // lesson (LESSON_REQUIRED_ROUNDS in convex/progression.ts) don't replay
+      // in an identical, obviously-memorizable sequence every time.
+      const ordered = shuffle([...challenges]);
       queueRef.current = new LessonQueue(ordered.map((c) => c.slug));
       startedAtRef.current = Date.now();
       setQueueVersion((v) => v + 1);
@@ -192,6 +196,9 @@ export default function LessonHost() {
         durationSec: String(durationSec),
         streak: String(result?.newStreak ?? ""),
         streakIsNew: String(result?.streakIsNew ?? false),
+        round: String(result?.round ?? ""),
+        roundsRequired: String(result?.roundsRequired ?? ""),
+        lessonFullyComplete: String(result?.lessonFullyComplete ?? true),
       },
     });
   }

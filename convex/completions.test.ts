@@ -1,14 +1,16 @@
-// Proves the recordCompletion contract (see coordinating loop's shared-contract spec):
-// idempotent per profileId+lessonSlug, correct XP accumulation, correct streak state
-// transitions (first-ever, same-day replay, consecutive-day, gap). Uses convex-test's
-// in-memory backend — same pattern as convex/units.test.ts (see that file's header
-// comment for why `modules` is hand-built and `anyApi` is used instead of the
-// checked-in, possibly-stale convex/_generated/api.ts).
+// Proves the recordCompletion contract (see coordinating loop's shared-contract spec,
+// extended for crown-level-style repetition): correct XP accumulation, correct streak
+// state transitions (first-ever, same-day replay, consecutive-day, gap), and correct
+// round counting per profileId+lessonSlug (LESSON_REQUIRED_ROUNDS in convex/progression.ts).
+// Uses convex-test's in-memory backend — same pattern as convex/units.test.ts (see that
+// file's header comment for why `modules` is hand-built and `anyApi` is used instead of
+// the checked-in, possibly-stale convex/_generated/api.ts).
 
 import { convexTest } from "convex-test";
 import { anyApi } from "convex/server";
 import schema from "./schema";
 import type { Id } from "./_generated/dataModel";
+import { LESSON_REQUIRED_ROUNDS } from "./progression";
 
 const api = anyApi as unknown as {
   completions: {
@@ -20,6 +22,7 @@ const modules = {
   "schema.ts": () => Promise.resolve(require("./schema")),
   "challengeText.ts": () => Promise.resolve(require("./challengeText")),
   "units.ts": () => Promise.resolve(require("./units")),
+  "progression.ts": () => Promise.resolve(require("./progression")),
   "completions.ts": () => Promise.resolve(require("./completions")),
   "_generated/server.js": () => Promise.resolve(require("./_generated/server")),
 };
@@ -66,10 +69,10 @@ function daysAgo(n: number): string {
 }
 
 // ---------------------------------------------------------------------------
-// 1. First completion ever: currentStreak=1, streakIsNew=true.
+// 1. First completion ever: currentStreak=1, streakIsNew=true, round=1.
 // ---------------------------------------------------------------------------
 
-test("first completion sets currentStreak=1 and streakIsNew=true", async () => {
+test("first completion sets currentStreak=1, streakIsNew=true, and round=1", async () => {
   const t = makeT();
   const profileId = await insertProfile(t); // lastActiveDay undefined
 
@@ -84,6 +87,9 @@ test("first completion sets currentStreak=1 and streakIsNew=true", async () => {
   expect(result.newStreak).toBe(1);
   expect(result.streakIsNew).toBe(true);
   expect(result.xpEarned).toBe(10);
+  expect(result.round).toBe(1);
+  expect(result.roundsRequired).toBe(LESSON_REQUIRED_ROUNDS);
+  expect(result.lessonFullyComplete).toBe(false); // LESSON_REQUIRED_ROUNDS > 1
 
   const profile = await getProfile(t, profileId);
   expect(profile!.currentStreak).toBe(1);
@@ -93,7 +99,8 @@ test("first completion sets currentStreak=1 and streakIsNew=true", async () => {
 });
 
 // ---------------------------------------------------------------------------
-// 2. A second completion the SAME day: streak unchanged, streakIsNew=false.
+// 2. A second completion the SAME day (different lesson): streak unchanged,
+//    streakIsNew=false.
 // ---------------------------------------------------------------------------
 
 test("a second completion the same day leaves streak unchanged and streakIsNew=false", async () => {
@@ -205,11 +212,12 @@ test("xpTotal accumulates correctly across calls", async () => {
 });
 
 // ---------------------------------------------------------------------------
-// 6. Calling twice with the same profileId+lessonSlug only inserts one completions
-//    row and does not double-add XP.
+// 6. Calling recordCompletion again for the SAME profileId+lessonSlug is now a
+//    legitimate next round (crown-level-style repetition), not a suppressed
+//    replay: it inserts a new row, keeps earning XP, and increments `round`.
 // ---------------------------------------------------------------------------
 
-test("calling recordCompletion twice with the same profileId+lessonSlug is idempotent", async () => {
+test("calling recordCompletion again for the same lesson records the next round and keeps earning XP", async () => {
   const t = makeT();
   const profileId = await insertProfile(t);
 
@@ -220,22 +228,21 @@ test("calling recordCompletion twice with the same profileId+lessonSlug is idemp
     accuracy: 1,
     durationSec: 100,
   });
+  expect(first.round).toBe(1);
   expect(first.xpEarned).toBe(10);
-  expect(first.streakIsNew).toBe(true);
 
   const second = await t.mutation(api.completions.recordCompletion, {
     profileId,
-    lessonSlug: "u1-l1", // same lesson
+    lessonSlug: "u1-l1", // same lesson — this is round 2, not a replay
     xpEarned: 10,
     accuracy: 1,
     durationSec: 100,
   });
-  // Replay: no XP re-added, no streak re-trigger.
-  expect(second.xpEarned).toBe(0);
-  expect(second.streakIsNew).toBe(false);
+  expect(second.round).toBe(2);
+  expect(second.xpEarned).toBe(10);
 
   const profile = await getProfile(t, profileId);
-  expect(profile!.xpTotal).toBe(10); // not 20
+  expect(profile!.xpTotal).toBe(20); // both rounds counted
 
   const completions = await t.run(async (ctx) => {
     return await ctx.db
@@ -245,5 +252,33 @@ test("calling recordCompletion twice with the same profileId+lessonSlug is idemp
       )
       .collect();
   });
-  expect(completions.length).toBe(1);
+  expect(completions.length).toBe(2);
+  expect(completions.map((c) => c.round).sort()).toEqual([1, 2]);
+});
+
+// ---------------------------------------------------------------------------
+// 7. lessonFullyComplete flips to true only once round reaches
+//    LESSON_REQUIRED_ROUNDS, not before.
+// ---------------------------------------------------------------------------
+
+test("lessonFullyComplete is false until LESSON_REQUIRED_ROUNDS is reached, then true", async () => {
+  const t = makeT();
+  const profileId = await insertProfile(t);
+
+  let lastResult: any;
+  for (let i = 0; i < LESSON_REQUIRED_ROUNDS; i++) {
+    lastResult = await t.mutation(api.completions.recordCompletion, {
+      profileId,
+      lessonSlug: "u1-l1",
+      xpEarned: 10,
+      accuracy: 1,
+      durationSec: 100,
+    });
+    if (i < LESSON_REQUIRED_ROUNDS - 1) {
+      expect(lastResult.lessonFullyComplete).toBe(false);
+    }
+  }
+
+  expect(lastResult.round).toBe(LESSON_REQUIRED_ROUNDS);
+  expect(lastResult.lessonFullyComplete).toBe(true);
 });
