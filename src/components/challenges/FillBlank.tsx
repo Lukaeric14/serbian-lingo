@@ -12,9 +12,7 @@ import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors, fonts, radii, spacing, type } from "@/design/tokens";
-import { Button } from "@/components/ui/Button";
-import { SpeakerButton } from "@/components/ui/SpeakerButton";
-import { Tile } from "@/components/ui/Tile";
+import { Button, SpeakerButton, Tile } from "@/components/ui";
 import { play } from "@/audio/player";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 

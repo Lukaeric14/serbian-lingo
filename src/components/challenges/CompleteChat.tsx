@@ -11,9 +11,7 @@ import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { colors, spacing, type as typeScale } from "@/design/tokens";
-import { SpeechBubble } from "@/components/ui/SpeechBubble";
-import { OptionCard } from "@/components/ui/OptionCard";
-import { Button } from "@/components/ui/Button";
+import { SpeechBubble, OptionCard, Button } from "@/components/ui";
 import { play } from "@/audio/player";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 

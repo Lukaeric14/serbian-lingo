@@ -14,9 +14,7 @@ import { play } from "@/audio/player";
 // NOTE: src/components/ui/index.ts (the barrel) does not exist yet in this worktree
 // (it's added by the coordinator after merging all challenge renderers), so primitives
 // are imported directly from their source files rather than via "@/components/ui".
-import { Button } from "@/components/ui/Button";
-import { SpeechBubble } from "@/components/ui/SpeechBubble";
-import { Tile } from "@/components/ui/Tile";
+import { Button, SpeechBubble, Tile } from "@/components/ui";
 import { colors, fonts, spacing, type } from "@/design/tokens";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 

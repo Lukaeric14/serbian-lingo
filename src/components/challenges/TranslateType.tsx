@@ -10,8 +10,7 @@ import { useEffect, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 
 import { play } from "@/audio/player";
-import { Button } from "@/components/ui/Button";
-import { SpeechBubble } from "@/components/ui/SpeechBubble";
+import { Button, SpeechBubble } from "@/components/ui";
 import { colors, radii, spacing, type } from "@/design/tokens";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
