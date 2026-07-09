@@ -13,6 +13,7 @@ import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 import { play } from "@/audio/player";
 import { AnswerLines, Button, ChallengeHeader, Tile } from "@/components/ui";
 import { colors, layout, spacing, type } from "@/design/tokens";
+import { shuffle } from "@/lib/shuffle";
 
 export type TranslateBankReverseChallenge = Extract<
   Challenge,
@@ -38,8 +39,10 @@ interface BankItem {
 export default function TranslateBankReverse({ challenge, onSubmit }: TranslateBankReverseProps) {
   const { promptText, wordBank } = challenge.payload;
 
+  // Stable per-mount shuffle — content stores wordBank in the correct-answer
+  // order, so an unshuffled bank would give the answer away.
   const bankItems = useMemo<BankItem[]>(
-    () => wordBank.map((word, id) => ({ id, word })),
+    () => shuffle(wordBank.map((word, id) => ({ id, word }))),
     [wordBank],
   );
 
@@ -120,9 +123,11 @@ export default function TranslateBankReverse({ challenge, onSubmit }: TranslateB
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     gap: spacing.lg,
   },
   content: {
+    flex: 1,
     gap: spacing.lg,
     paddingHorizontal: layout.screenPaddingH,
   },

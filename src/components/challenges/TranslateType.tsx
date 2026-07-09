@@ -75,9 +75,11 @@ export function TranslateType({ challenge, onSubmit }: TranslateTypeProps) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     gap: spacing.lg,
   },
   content: {
+    flex: 1,
     paddingHorizontal: layout.screenPaddingH,
     gap: spacing.lg,
   },

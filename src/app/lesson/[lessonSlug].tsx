@@ -263,7 +263,7 @@ export default function LessonHost() {
   } as Challenge;
 
   return (
-    <SafeAreaView edges={["top"]} style={styles.container}>
+    <SafeAreaView edges={["top", "bottom"]} style={styles.container}>
       <View style={styles.header}>
         <Pressable
           onPress={() => router.back()}

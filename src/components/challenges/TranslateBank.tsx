@@ -6,12 +6,13 @@
 // not know about lesson-level state (streaks, XP, queue position) — that
 // lives one level up in the future Lesson host screen.
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import { AnswerLines, Button, ChallengeHeader, SpeechBubble, Tile } from "@/components/ui";
 import { layout, spacing } from "@/design/tokens";
 import { play } from "@/audio/player";
+import { shuffle } from "@/lib/shuffle";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
 export type TranslateBankProps = {
@@ -30,7 +31,12 @@ export default function TranslateBank({ challenge, onSubmit }: TranslateBankProp
   // Order in which bank slot ids have been picked into the answer area.
   const [pickedIds, setPickedIds] = useState<number[]>([]);
 
-  const bankSlots: BankSlot[] = wordBank.map((label, id) => ({ id, label }));
+  // Stable per-mount shuffle — content stores wordBank in the correct-answer
+  // order, so an unshuffled bank would give the answer away.
+  const bankSlots: BankSlot[] = useMemo(
+    () => shuffle(wordBank.map((label, id) => ({ id, label }))),
+    [wordBank],
+  );
   const pickedSet = new Set(pickedIds);
 
   useEffect(() => {

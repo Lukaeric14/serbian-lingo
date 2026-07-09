@@ -14,6 +14,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { colors, fonts, layout, radii, spacing, type } from "@/design/tokens";
 import { Button, ChallengeHeader, SpeakerButton, Tile } from "@/components/ui";
 import { play } from "@/audio/player";
+import { padAfterBlank, padBeforeBlank } from "@/lib/blank-spacing";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
 export type FillBlankChallenge = Extract<Challenge, { type: "fill_blank" }>;
@@ -49,9 +50,9 @@ export default function FillBlank({ challenge, onSubmit }: FillBlankProps) {
             style={styles.speaker}
           />
           <Text style={styles.sentenceText}>
-            {sentenceBefore}
+            {padBeforeBlank(sentenceBefore)}
             <Text style={styles.blank}>{selected ?? "____"}</Text>
-            {sentenceAfter}
+            {padAfterBlank(sentenceAfter)}
           </Text>
         </View>
 
@@ -79,9 +80,11 @@ export default function FillBlank({ challenge, onSubmit }: FillBlankProps) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     gap: spacing.xl,
   },
   content: {
+    flex: 1,
     paddingHorizontal: layout.screenPaddingH,
     gap: spacing.xl,
   },

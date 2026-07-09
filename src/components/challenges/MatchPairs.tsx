@@ -11,6 +11,7 @@ import { StyleSheet, View } from "react-native";
 import { ChallengeHeader, OptionCard, type OptionCardState } from "@/components/ui";
 import { layout, spacing } from "@/design/tokens";
 import { play } from "@/audio/player";
+import { shuffle } from "@/lib/shuffle";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
 export type MatchPairsChallenge = Extract<Challenge, { type: "match_pairs" }>;
@@ -28,16 +29,6 @@ interface Tile {
   /** Index into challenge.payload.pairs — identifies which pair this tile belongs to. */
   pairIndex: number;
   label: string;
-}
-
-/** Deterministic-per-mount shuffle (Fisher-Yates). */
-function shuffle<T>(items: T[]): T[] {
-  const result = [...items];
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
-  }
-  return result;
 }
 
 export default function MatchPairs({ challenge, onSubmit }: MatchPairsProps) {

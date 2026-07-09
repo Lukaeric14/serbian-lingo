@@ -70,10 +70,11 @@ export default function ListenType({ challenge, onSubmit }: ListenTypeProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     gap: spacing.xl,
   },
   content: {
+    flex: 1,
+    justifyContent: "center",
     paddingHorizontal: layout.screenPaddingH,
     gap: spacing.xl,
   },

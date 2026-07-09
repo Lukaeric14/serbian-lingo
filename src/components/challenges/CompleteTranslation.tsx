@@ -13,6 +13,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { play } from "@/audio/player";
 import { Button, ChallengeHeader, SpeechBubble, Tile } from "@/components/ui";
 import { colors, fonts, layout, spacing, type } from "@/design/tokens";
+import { padAfterBlank, padBeforeBlank } from "@/lib/blank-spacing";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
 const PLACEHOLDER = "___";
@@ -57,9 +58,9 @@ export default function CompleteTranslation({ challenge, onSubmit }: CompleteTra
 
         <View style={styles.templateRow}>
           <Text style={styles.templateText}>
-            {before}
+            {padBeforeBlank(before)}
             <Text style={styles.blank}>{selected ?? PLACEHOLDER}</Text>
-            {after}
+            {padAfterBlank(after)}
           </Text>
         </View>
 
@@ -97,9 +98,11 @@ function splitTemplate(template: string): [string, string] {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     gap: spacing.lg,
   },
   content: {
+    flex: 1,
     paddingHorizontal: layout.screenPaddingH,
     gap: spacing.lg,
   },

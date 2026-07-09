@@ -70,9 +70,11 @@ export default function MarkMeaning({ challenge, onSubmit }: MarkMeaningProps) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     gap: spacing.xl,
   },
   content: {
+    flex: 1,
     gap: spacing.xl,
     paddingHorizontal: layout.screenPaddingH,
   },
