@@ -238,5 +238,121 @@
   {
     "text": "Dominika i ja imamo jednu kuću.",
     "kind": "sentence"
+  },
+  {
+    "text": "Dominika i ja imamo dva psa.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Dominika",
+    "kind": "word"
+  },
+  {
+    "text": "ja",
+    "kind": "word"
+  },
+  {
+    "text": "Julia i Agnieszka su ovde, a Wieslaw nije.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Agnieszka",
+    "kind": "word"
+  },
+  {
+    "text": "ovde",
+    "kind": "word"
+  },
+  {
+    "text": "a",
+    "kind": "word"
+  },
+  {
+    "text": "Wieslaw",
+    "kind": "word"
+  },
+  {
+    "text": "nije",
+    "kind": "word"
+  },
+  {
+    "text": "Stefan ima tri knjige.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Mi smo prijatelji, a vi ste sestre.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Lidija i Biljana imaju jednu kuću u gradu.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Nesa ima četiri mačke, a Filip ima dve.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Filip",
+    "kind": "word"
+  },
+  {
+    "text": "Deca su ovde, a žene nisu.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Koliko stolova imate?",
+    "kind": "sentence"
+  },
+  {
+    "text": "Olivera i Slobodan su dobri prijatelji.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Olivera",
+    "kind": "word"
+  },
+  {
+    "text": "dobri",
+    "kind": "word"
+  },
+  {
+    "text": "Imamo dva psa i jednu mačku.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Koliko knjiga imaš?",
+    "kind": "sentence"
+  },
+  {
+    "text": "Deca imaju tri psa i četiri mačke.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Deca",
+    "kind": "word"
+  },
+  {
+    "text": "Tetka Lidija ima dve knjige, a tetka Biljana ima tri.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Mi imamo kuću, a oni imaju sto.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Koliko godina ste prijatelji?",
+    "kind": "sentence"
+  },
+  {
+    "text": "Koliko",
+    "kind": "word"
+  },
+  {
+    "text": "imate",
+    "kind": "word"
+  },
+  {
+    "text": "Filip i Nesa imaju jednog psa, a Stefan ima dve mačke.",
+    "kind": "sentence"
   }
 ]
