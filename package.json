@@ -46,7 +46,11 @@
     "preset": "jest-expo",
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/convex/_generated/"
+      "/convex/_generated/",
+      "/.claude/worktrees/"
+    ],
+    "modulePathIgnorePatterns": [
+      "/.claude/worktrees/"
     ]
   },
   "private": true

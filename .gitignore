@@ -3,6 +3,9 @@
 # dependencies
 node_modules/
 
+# parallel-agent scratch worktrees (Workflow isolation:'worktree')
+.claude/worktrees/
+
 # Expo
 .expo/
 dist/
