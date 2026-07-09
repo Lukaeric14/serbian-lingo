@@ -479,7 +479,7 @@
             "wordBank": [
               "Ja",
               "sam",
-              "ovde.",
+              "ovde",
               "si",
               "je",
               "ne"
@@ -521,11 +521,11 @@
             "wordBank": [
               "Ona",
               "je",
-              "žena,",
+              "žena",
               "a",
               "ja",
               "sam",
-              "ovde.",
+              "ovde",
               "ne"
             ]
           },
@@ -580,10 +580,10 @@
             "promptText": "No, I am not Dominika.",
             "correctAnswer": "Ne, ja nisam Dominika.",
             "wordBank": [
-              "Ne,",
+              "Ne",
               "ja",
               "nisam",
-              "Dominika.",
+              "Dominika",
               "si",
               "je"
             ]
@@ -638,11 +638,11 @@
             "wordBank": [
               "Dominika",
               "je",
-              "žena,",
+              "žena",
               "a",
               "Filip",
               "je",
-              "čovek.",
+              "čovek",
               "nije",
               "voda"
             ]
@@ -702,7 +702,7 @@
               "i",
               "voda",
               "su",
-              "ovde.",
+              "ovde",
               "je",
               "nisu"
             ]
@@ -776,15 +776,15 @@
             "promptText": "Yes, Julia is here, and Agnieszka is here too.",
             "correctAnswer": "Da, Julia je ovde, a i Agnješka je ovde.",
             "wordBank": [
-              "Da,",
+              "Da",
               "Julia",
               "je",
-              "ovde,",
+              "ovde",
               "a",
               "i",
               "Agnješka",
               "je",
-              "ovde.",
+              "ovde",
               "ne",
               "nije"
             ]
@@ -822,10 +822,10 @@
             "wordBank": [
               "Olivera",
               "je",
-              "ovde,",
+              "ovde",
               "a",
               "Slobodan",
-              "nije.",
+              "nije",
               "ne",
               "da"
             ]
@@ -893,12 +893,12 @@
             "wordBank": [
               "Lidija",
               "je",
-              "student,",
+              "student",
               "a",
               "i",
               "Neša",
               "je",
-              "student.",
+              "student",
               "nije"
             ]
           },

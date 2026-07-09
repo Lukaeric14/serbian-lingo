@@ -4,12 +4,13 @@
 
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useQuery } from "convex/react";
 
 import { PathNode } from "@/components/ui";
 import { BoltIcon, FlameIcon } from "@/components/ui/icons";
-import { colors, fonts, radii, spacing, type } from "@/design/tokens";
+import { colors, fonts, layout, radii, spacing, type } from "@/design/tokens";
 import { getSelectedProfileId } from "@/lib/selected-profile";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
@@ -50,14 +51,14 @@ export default function PathScreen() {
 
   // Profile not resolved yet, or redirecting to the picker.
   if (profileId === undefined || profileId === null) {
-    return <View style={styles.container} />;
+    return <SafeAreaView edges={["top"]} style={styles.container} />;
   }
 
   if (path === undefined) {
     return (
-      <View style={[styles.container, styles.centered]}>
+      <SafeAreaView edges={["top"]} style={[styles.container, styles.centered]}>
         <Text style={styles.loadingText}>Loading…</Text>
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -73,7 +74,8 @@ export default function PathScreen() {
   let globalIndex = 0;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
+      <ScrollView contentContainerStyle={styles.content}>
       <View style={styles.statBar}>
         <View style={styles.statItem}>
           <FlameIcon size={type.title.fontSize} />
@@ -121,7 +123,8 @@ export default function PathScreen() {
           </View>
         </View>
       ))}
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -146,7 +149,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.xl,
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: layout.screenPaddingH,
     paddingVertical: spacing.md,
     backgroundColor: colors.background,
     borderBottomWidth: 1,
@@ -166,11 +169,11 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   banner: {
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: layout.screenPaddingH,
     paddingVertical: spacing.md,
     borderRadius: radii.md,
-    marginHorizontal: spacing.lg,
-    marginTop: spacing.lg,
+    marginHorizontal: layout.screenPaddingH,
+    marginTop: layout.screenPaddingTop,
     marginBottom: spacing.xl,
   },
   bannerSection: {
