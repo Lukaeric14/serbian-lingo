@@ -10,8 +10,8 @@ import { useEffect, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 
 import { play } from "@/audio/player";
-import { Button, SpeechBubble } from "@/components/ui";
-import { colors, radii, spacing, type } from "@/design/tokens";
+import { AnswerLines, Button, ChallengeHeader, SpeechBubble } from "@/components/ui";
+import { colors, layout, radii, spacing, type } from "@/design/tokens";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
 export interface TranslateTypeProps {
@@ -45,21 +45,28 @@ export function TranslateType({ challenge, onSubmit }: TranslateTypeProps) {
 
   return (
     <View style={styles.container}>
-      <SpeechBubble
-        text={promptText}
-        onAudioTap={isSourceSerbian ? handleAudioTap : undefined}
-      />
+      <View style={styles.content}>
+        <ChallengeHeader title="Translate this sentence" />
 
-      <TextInput
-        style={styles.input}
-        value={text}
-        onChangeText={setText}
-        placeholder="Type your answer"
-        placeholderTextColor={colors.textMedium}
-        autoCapitalize="none"
-        autoCorrect={false}
-        testID="translate-type-input"
-      />
+        <SpeechBubble
+          text={promptText}
+          onAudioTap={isSourceSerbian ? handleAudioTap : undefined}
+        />
+
+        <View style={styles.inputArea}>
+          <TextInput
+            style={styles.input}
+            value={text}
+            onChangeText={setText}
+            placeholder="Type your answer"
+            placeholderTextColor={colors.textMedium}
+            autoCapitalize="none"
+            autoCorrect={false}
+            testID="translate-type-input"
+          />
+          <AnswerLines count={1} />
+        </View>
+      </View>
 
       <Button variant="green" label="Check" onPress={handleCheck} />
     </View>
@@ -69,6 +76,13 @@ export function TranslateType({ challenge, onSubmit }: TranslateTypeProps) {
 const styles = StyleSheet.create({
   container: {
     gap: spacing.lg,
+  },
+  content: {
+    paddingHorizontal: layout.screenPaddingH,
+    gap: spacing.lg,
+  },
+  inputArea: {
+    gap: spacing.sm,
   },
   input: {
     borderWidth: 1,

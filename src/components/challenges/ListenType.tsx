@@ -9,8 +9,8 @@ import { useEffect, useState } from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 
 import { play } from "@/audio/player";
-import { Button, SpeakerButton } from "@/components/ui";
-import { colors, fonts, radii, spacing, type } from "@/design/tokens";
+import { AnswerLines, Button, ChallengeHeader, SpeakerButton } from "@/components/ui";
+import { colors, fonts, layout, radii, spacing, type } from "@/design/tokens";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
 export interface ListenTypeProps {
@@ -38,23 +38,30 @@ export default function ListenType({ challenge, onSubmit }: ListenTypeProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.speakerRow}>
-        <SpeakerButton
-          size="large"
-          onPress={handleReplay}
-          accessibilityLabel="Play audio"
-        />
+      <View style={styles.content}>
+        <ChallengeHeader title="Type what you hear" />
+
+        <View style={styles.speakerRow}>
+          <SpeakerButton
+            size="large"
+            onPress={handleReplay}
+            accessibilityLabel="Play audio"
+          />
+        </View>
+        <View style={styles.inputArea}>
+          <TextInput
+            style={styles.input}
+            value={text}
+            onChangeText={setText}
+            placeholder="Type what you hear"
+            placeholderTextColor={colors.textMedium}
+            autoCapitalize="none"
+            autoCorrect={false}
+            accessibilityLabel="Typed answer"
+          />
+          <AnswerLines count={1} />
+        </View>
       </View>
-      <TextInput
-        style={styles.input}
-        value={text}
-        onChangeText={setText}
-        placeholder="Type what you hear"
-        placeholderTextColor={colors.textMedium}
-        autoCapitalize="none"
-        autoCorrect={false}
-        accessibilityLabel="Typed answer"
-      />
       <Button variant="green" label="Check" onPress={handleCheck} />
     </View>
   );
@@ -63,14 +70,19 @@ export default function ListenType({ challenge, onSubmit }: ListenTypeProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "stretch",
     justifyContent: "center",
-    paddingHorizontal: spacing.xl,
+    gap: spacing.xl,
+  },
+  content: {
+    paddingHorizontal: layout.screenPaddingH,
     gap: spacing.xl,
   },
   speakerRow: {
     alignItems: "center",
     justifyContent: "center",
+  },
+  inputArea: {
+    gap: spacing.sm,
   },
   input: {
     borderWidth: 2,
