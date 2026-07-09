@@ -63,12 +63,16 @@ export default defineSchema({
 
   // Keyed to the EXACT displayed Serbian surface form (inflected), never the lemma —
   // Serbian's 7 cases mean "vodu" and "voda" are different clips. See SPEC.md §2.
-  // audioStorageId is required: a row only exists once real synthesis has completed,
-  // so "what's missing" is just "which displayed strings have no matching row".
+  // url is required: a row only exists once real synthesis has completed and the
+  // clip has been uploaded, so "what's missing" is just "which displayed strings
+  // have no matching row". Clips live in Cloudflare R2 (not Convex file storage) —
+  // static, immutable, CDN-served assets fit an object store better than routing
+  // through Convex's storage API, and it avoids Convex bandwidth billing as the
+  // audio library grows across units 4-9.
   audioClips: defineTable({
     text: v.string(),
     kind: v.union(v.literal("word"), v.literal("sentence")),
-    audioStorageId: v.id("_storage"),
+    url: v.string(),
   }).index("by_text", ["text"]),
 
   // Drives the NEW WORD pill + review docs only — never resolves audio playback

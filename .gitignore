@@ -36,6 +36,9 @@ yarn-error.*
 # local env files
 .env*.local
 
+# throwaway voice-comparison audio (item 11) — real clips live in R2, not the repo
+/data/audio-samples/
+
 # typescript
 *.tsbuildinfo
 

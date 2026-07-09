@@ -8,6 +8,7 @@
  * @module
  */
 
+import type * as audioClips from "../audioClips.js";
 import type * as challengeText from "../challengeText.js";
 import type * as completions from "../completions.js";
 import type * as lessons from "../lessons.js";
@@ -22,6 +23,7 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  audioClips: typeof audioClips;
   challengeText: typeof challengeText;
   completions: typeof completions;
   lessons: typeof lessons;

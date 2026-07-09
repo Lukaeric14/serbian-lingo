@@ -13,7 +13,7 @@ Content pipeline (scripts, run on demand)
 ```
 
 - **Content lives in Convex, not in the app bundle** — units 4–9 and QA fixes ship without reinstalls.
-- **Audio is pre-generated** for every unique Serbian surface form AND every sentence prompt (no runtime TTS calls) — the app only ever plays static MP3s.
+- **Audio is pre-generated** for every unique Serbian surface form AND every sentence prompt (no runtime TTS calls) — the app only ever plays static MP3s, served from Cloudflare R2 (not Convex file storage — see Stack table).
 - **No auth.** Two profile documents; the app stores the picked profile id locally.
 
 ### Stack
@@ -22,7 +22,8 @@ Content pipeline (scripts, run on demand)
 |---|---|---|
 | App | Expo (React Native + TypeScript, Expo Router) | User requirement; one codebase, iOS-first |
 | Audio | `expo-audio` | Successor to deprecated `expo-av` (confirm version at Phase 0) |
-| Backend | Convex | User requirement; queries/mutations + file storage in one |
+| Backend | Convex | User requirement; queries/mutations for content + progress |
+| Audio storage | Cloudflare R2 | Static, immutable, CDN-served clips fit an object store better than Convex's file API; zero egress fees as the library grows across units 4–9 (S3-compatible, `@aws-sdk/client-s3`) |
 | TTS | Azure AI Speech, `sr-Latn-RS` | Only provider with native Latin-script Serbian; neural voices Sophie/Nicholas (verified) |
 | TTS fallback | Google Cloud TTS `sr-RS` (Chirp 3: HD) | 30 premium voices, Cyrillic-catalogued; Serbian Latin↔Cyrillic is a 1:1 deterministic mapping, so transliteration is trivial |
 | Fonts | Nunito (ExtraBold/Bold) | Closest free match to Duolingo's rounded face |
@@ -36,7 +37,7 @@ Modeled on the verified open-source clone hierarchy (courses → units → lesso
 - **units** — `order`, `title`, `objective`, `color` (path/banner theming), `sectionTitle`
 - **lessons** — `unitId`, `order`, `kind` (`lesson` | `chest`)
 - **challenges** — `lessonId`, `order`, `type` (enum, §4), `payload` (per-type JSON: prompt, correct answer(s), distractor pool), `newVocabIds`
-- **audioClips** — `text` (the exact Serbian Latin string as displayed — inflected surface form or full sentence; Serbian's seven cases mean displayed forms like "vodu" ≠ lemma "voda", so lemma-keyed audio would be wrong), `kind` (`word` | `sentence`), `audioStorageId`; unique index on `text`
+- **audioClips** — `text` (the exact Serbian Latin string as displayed — inflected surface form or full sentence; Serbian's seven cases mean displayed forms like "vodu" ≠ lemma "voda", so lemma-keyed audio would be wrong), `kind` (`word` | `sentence`), `url` (public R2 URL); unique index on `text`
 - **vocab** — `lemma`, `gloss`, `introducedInUnit` — drives the NEW WORD pill and review docs; playback never resolves through vocab, always through `audioClips` by exact displayed text
 - **completions** — `profileId`, `lessonId`, `xpEarned`, `accuracy`, `durationSec`, `day`
 - **xpEvents** — `profileId`, `day`, `amount` (daily-goal progress = sum for today)
@@ -55,7 +56,7 @@ Content identity & publishing rules (so content updates never corrupt progress):
 1. **Curriculum snapshot (checked in — no scraper machinery)** — `data/curriculum/section1.json`: one static, hand-assembled snapshot of the Polish course's Section 1 scope (9 unit objectives + vocab coverage), compiled once from the public dumps (duolingodata.com current path, duome.eu vocab lists). The dumps are scope-and-sequence guides, not gospel (legacy tree ≠ current path, verified); Luka's review docs are the real quality gate.
 2. **`generate-unit`** — produce `data/units/unit-NN.json` for a Serbian unit mirroring the Polish unit's objective: vocab, sentences + accepted translations, distractors, challenge sequence with the recognition→production ramp, stable ids per §2. Standard ekavian Serbian, Latin script. Recurring characters: Dominika, Julia, Agnieszka, Wieslaw, Stefan, Olivera, Slobodan, Lidija, Biljana, Nesa, Filip.
 3. **QA gate** — each unit also emits `data/review/unit-NN.md`: every sentence + translation in a readable table. **Luka approves before seeding** (`approvedAt` set on sign-off). (~10 min/unit)
-4. **`generate-audio`** — diff the unit's unique Serbian surface forms AND full sentence prompts against existing `audioClips` → Azure TTS (`sr-Latn-RS`, chosen voice) → MP3s into Convex storage. Idempotent, keyed by exact text.
+4. **`generate-audio`** — diff the unit's unique Serbian surface forms AND full sentence prompts against existing `audioClips` → Azure TTS (`sr-Latn-RS`, chosen voice) → MP3s uploaded to Cloudflare R2, URL recorded via `audioClips.upsertClip`. Idempotent, keyed by exact text.
 5. **`seed`** — upsert approved unit JSON into Convex under stable ids, enforcing the §2 publishing rules (approval required, audio-completeness validation, append-only ordering). Safe to re-run; never touches progress.
 
 ## 4. Lesson engine

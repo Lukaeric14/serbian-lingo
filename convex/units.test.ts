@@ -99,8 +99,11 @@ const REQUIRED_TEXTS = ["Zdravo!", "Voda"];
 
 async function insertAudioClip(t: ReturnType<typeof makeT>, text: string) {
   await t.run(async (ctx) => {
-    const storageId = await ctx.storage.store(new Blob(["fake-audio-bytes"]));
-    await ctx.db.insert("audioClips", { text, kind: "word", audioStorageId: storageId });
+    await ctx.db.insert("audioClips", {
+      text,
+      kind: "word",
+      url: `https://pub-fake.r2.dev/${encodeURIComponent(text)}.mp3`,
+    });
   });
 }
 
