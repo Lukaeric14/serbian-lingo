@@ -1,0 +1,8 @@
+export { StarIcon } from "./StarIcon";
+export { LockIcon } from "./LockIcon";
+export { ChestIcon } from "./ChestIcon";
+export { DumbbellIcon } from "./DumbbellIcon";
+export { CheckIcon } from "./CheckIcon";
+export { FlameIcon } from "./FlameIcon";
+export { BoltIcon } from "./BoltIcon";
+export type { IconProps } from "./StarIcon";

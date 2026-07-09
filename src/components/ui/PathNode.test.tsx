@@ -2,7 +2,7 @@
 import React from "react";
 import { render } from "@testing-library/react-native";
 import { PathNode, type PathNodeKind, type PathNodeState } from "./PathNode";
-import { colors } from "@/design/tokens";
+import { colors, glow } from "@/design/tokens";
 
 const states: PathNodeState[] = ["active", "completed", "locked"];
 const kinds: PathNodeKind[] = ["lesson", "chest", "practice"];
@@ -52,5 +52,54 @@ describe("PathNode", () => {
     );
     const button = getByRole("button");
     expect(button.props.accessibilityState?.disabled).toBeFalsy();
+  });
+
+  it("renders a real SVG icon, never emoji/text glyphs, for every state/kind", async () => {
+    const cases: Array<{
+      state: PathNodeState;
+      kind: PathNodeKind;
+      testID: string;
+    }> = [
+      { state: "locked", kind: "lesson", testID: "path-node-icon-lock" },
+      { state: "locked", kind: "chest", testID: "path-node-icon-lock" },
+      { state: "locked", kind: "practice", testID: "path-node-icon-lock" },
+      { state: "active", kind: "lesson", testID: "path-node-icon-star" },
+      { state: "completed", kind: "lesson", testID: "path-node-icon-check" },
+      { state: "active", kind: "chest", testID: "path-node-icon-chest" },
+      { state: "completed", kind: "chest", testID: "path-node-icon-chest" },
+      { state: "active", kind: "practice", testID: "path-node-icon-dumbbell" },
+      { state: "completed", kind: "practice", testID: "path-node-icon-dumbbell" },
+    ];
+
+    for (const { state, kind, testID } of cases) {
+      const { getByTestId, queryAllByText } = await render(
+        <PathNode state={state} kind={kind} color={colors.blue} />
+      );
+      expect(getByTestId(testID)).toBeTruthy();
+      // No leftover emoji/text glyphs (🔒 🎁 💪 ✓ ★) should ever render.
+      expect(queryAllByText(/[🔒🎁💪✓★🔥⚡]/u)).toHaveLength(0);
+    }
+  });
+
+  it("applies a gold glow wrapper style when completed", async () => {
+    const { getByTestId } = await render(
+      <PathNode state="completed" kind="lesson" color={colors.green} />
+    );
+    const wrapper = getByTestId("path-node-wrapper");
+    const flatStyle = Array.isArray(wrapper.props.style)
+      ? Object.assign({}, ...wrapper.props.style.flat(Infinity).filter(Boolean))
+      : wrapper.props.style;
+    expect(flatStyle.shadowColor).toBe(glow.gold.shadowColor);
+  });
+
+  it("applies a green glow wrapper style when active", async () => {
+    const { getByTestId } = await render(
+      <PathNode state="active" kind="lesson" color={colors.green} />
+    );
+    const wrapper = getByTestId("path-node-wrapper");
+    const flatStyle = Array.isArray(wrapper.props.style)
+      ? Object.assign({}, ...wrapper.props.style.flat(Infinity).filter(Boolean))
+      : wrapper.props.style;
+    expect(flatStyle.shadowColor).toBe(glow.green.shadowColor);
   });
 });

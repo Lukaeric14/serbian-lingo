@@ -8,6 +8,7 @@ import { useRouter } from "expo-router";
 import { useQuery } from "convex/react";
 
 import { PathNode } from "@/components/ui";
+import { BoltIcon, FlameIcon } from "@/components/ui/icons";
 import { colors, fonts, radii, spacing, type } from "@/design/tokens";
 import { getSelectedProfileId } from "@/lib/selected-profile";
 import { api } from "../../convex/_generated/api";
@@ -75,11 +76,11 @@ export default function PathScreen() {
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.statBar}>
         <View style={styles.statItem}>
-          <Text style={styles.statIcon}>🔥</Text>
+          <FlameIcon size={type.title.fontSize} />
           <Text style={styles.statValue}>{completedLessons}</Text>
         </View>
         <View style={styles.statItem}>
-          <Text style={styles.statIcon}>⚡</Text>
+          <BoltIcon size={type.title.fontSize} />
           <Text style={styles.statValue}>
             {completedLessons}/{totalLessons}
           </Text>
@@ -155,9 +156,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.xs,
-  },
-  statIcon: {
-    fontSize: type.title.fontSize,
   },
   statValue: {
     fontFamily: fonts.extraBold,
