@@ -71,3 +71,33 @@ export const pressDepth = {
   edgeHeight: 4,
   pressedTranslateY: 4,
 } as const;
+
+// Single source of truth for screen-level spacing — every screen (src/app/*)
+// must wrap its content in these (or the ScreenContainer primitive that reads
+// them) rather than inventing its own padding per screen.
+export const layout = {
+  screenPaddingH: spacing.lg, // 16 — horizontal margin from the device edge
+  screenPaddingTop: spacing.lg, // 16 — below the safe area inset, not instead of it
+  screenPaddingBottom: spacing.xl, // 24 — extra room above home indicator / bottom bars
+  sectionGap: spacing.xl, // 24 — vertical gap between major blocks on a screen
+} as const;
+
+// Soft radial-glow presets (native shadow, not a CSS blur) for celebratory/active
+// elements — path nodes, badges, streak milestones. iOS renders shadowRadius as
+// a genuine soft blur; Android needs elevation as a fallback (flatter, but present).
+export const glow = {
+  gold: {
+    shadowColor: colors.gold,
+    shadowOpacity: 0.9,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 10,
+  },
+  green: {
+    shadowColor: colors.green,
+    shadowOpacity: 0.8,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 10,
+  },
+} as const;
