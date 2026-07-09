@@ -11,8 +11,8 @@
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import { colors, fonts, radii, spacing, type } from "@/design/tokens";
-import { Button, SpeakerButton, Tile } from "@/components/ui";
+import { colors, fonts, layout, radii, spacing, type } from "@/design/tokens";
+import { Button, ChallengeHeader, SpeakerButton, Tile } from "@/components/ui";
 import { play } from "@/audio/player";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
@@ -39,28 +39,32 @@ export default function FillBlank({ challenge, onSubmit }: FillBlankProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.sentenceRow}>
-        <SpeakerButton
-          size="small"
-          onPress={() => play(fullSentenceAudioText)}
-          style={styles.speaker}
-        />
-        <Text style={styles.sentenceText}>
-          {sentenceBefore}
-          <Text style={styles.blank}>{selected ?? "____"}</Text>
-          {sentenceAfter}
-        </Text>
-      </View>
+      <View style={styles.content}>
+        <ChallengeHeader title="Fill in the blank" />
 
-      <View style={styles.optionsRow}>
-        {options.map((option) => (
-          <Tile
-            key={option}
-            label={option}
-            state={selected === option ? "selected" : "default"}
-            onPress={() => handleOptionPress(option)}
+        <View style={styles.sentenceRow}>
+          <SpeakerButton
+            size="small"
+            onPress={() => play(fullSentenceAudioText)}
+            style={styles.speaker}
           />
-        ))}
+          <Text style={styles.sentenceText}>
+            {sentenceBefore}
+            <Text style={styles.blank}>{selected ?? "____"}</Text>
+            {sentenceAfter}
+          </Text>
+        </View>
+
+        <View style={styles.optionsRow}>
+          {options.map((option) => (
+            <Tile
+              key={option}
+              label={option}
+              state={selected === option ? "selected" : "default"}
+              onPress={() => handleOptionPress(option)}
+            />
+          ))}
+        </View>
       </View>
 
       <Button
@@ -75,6 +79,10 @@ export default function FillBlank({ challenge, onSubmit }: FillBlankProps) {
 
 const styles = StyleSheet.create({
   container: {
+    gap: spacing.xl,
+  },
+  content: {
+    paddingHorizontal: layout.screenPaddingH,
     gap: spacing.xl,
   },
   sentenceRow: {

@@ -11,11 +11,8 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { play } from "@/audio/player";
-// NOTE: src/components/ui/index.ts (the barrel) does not exist yet in this worktree
-// (it's added by the coordinator after merging all challenge renderers), so primitives
-// are imported directly from their source files rather than via "@/components/ui".
-import { Button, SpeechBubble, Tile } from "@/components/ui";
-import { colors, fonts, spacing, type } from "@/design/tokens";
+import { Button, ChallengeHeader, SpeechBubble, Tile } from "@/components/ui";
+import { colors, fonts, layout, spacing, type } from "@/design/tokens";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
 const PLACEHOLDER = "___";
@@ -53,25 +50,29 @@ export default function CompleteTranslation({ challenge, onSubmit }: CompleteTra
 
   return (
     <View style={styles.container}>
-      <SpeechBubble text={sourceText} onAudioTap={handleReplay} />
+      <View style={styles.content}>
+        <ChallengeHeader title="Complete the translation" />
 
-      <View style={styles.templateRow}>
-        <Text style={styles.templateText}>
-          {before}
-          <Text style={styles.blank}>{selected ?? PLACEHOLDER}</Text>
-          {after}
-        </Text>
-      </View>
+        <SpeechBubble text={sourceText} onAudioTap={handleReplay} />
 
-      <View style={styles.optionsRow}>
-        {options.map((option) => (
-          <Tile
-            key={option}
-            label={option}
-            state={selected === option ? "selected" : "default"}
-            onPress={() => handleSelect(option)}
-          />
-        ))}
+        <View style={styles.templateRow}>
+          <Text style={styles.templateText}>
+            {before}
+            <Text style={styles.blank}>{selected ?? PLACEHOLDER}</Text>
+            {after}
+          </Text>
+        </View>
+
+        <View style={styles.optionsRow}>
+          {options.map((option) => (
+            <Tile
+              key={option}
+              label={option}
+              state={selected === option ? "selected" : "default"}
+              onPress={() => handleSelect(option)}
+            />
+          ))}
+        </View>
       </View>
 
       <Button
@@ -96,6 +97,10 @@ function splitTemplate(template: string): [string, string] {
 
 const styles = StyleSheet.create({
   container: {
+    gap: spacing.lg,
+  },
+  content: {
+    paddingHorizontal: layout.screenPaddingH,
     gap: spacing.lg,
   },
   templateRow: {
