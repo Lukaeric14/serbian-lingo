@@ -10,8 +10,8 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { colors, spacing, type as typeScale } from "@/design/tokens";
-import { SpeechBubble, OptionCard, Button } from "@/components/ui";
+import { colors, layout, spacing, type as typeScale } from "@/design/tokens";
+import { SpeechBubble, OptionCard, Button, ChallengeHeader } from "@/components/ui";
 import { play } from "@/audio/player";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
@@ -43,6 +43,8 @@ export default function CompleteChat({ challenge, onSubmit }: CompleteChatProps)
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
       >
+        <ChallengeHeader title="Complete the chat" />
+
         <View style={styles.dialogue}>
           {dialogue.map((bubble, index) => (
             <SpeechBubble
@@ -89,7 +91,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: spacing.lg,
+    paddingHorizontal: layout.screenPaddingH,
+    paddingVertical: spacing.lg,
     gap: spacing.xl,
   },
   dialogue: {
@@ -104,6 +107,6 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   footer: {
-    padding: spacing.lg,
+    paddingTop: spacing.lg,
   },
 });
