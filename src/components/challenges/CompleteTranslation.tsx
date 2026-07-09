@@ -12,7 +12,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 import { play } from "@/audio/player";
 import { Button, ChallengeHeader, SpeechBubble, Tile } from "@/components/ui";
-import { colors, fonts, layout, spacing, type } from "@/design/tokens";
+import { colors, fonts, spacing, type } from "@/design/tokens";
 import { padAfterBlank, padBeforeBlank } from "@/lib/blank-spacing";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
@@ -103,7 +103,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: layout.screenPaddingH,
     gap: spacing.lg,
   },
   templateRow: {

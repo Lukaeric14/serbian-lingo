@@ -11,7 +11,7 @@ import { StyleSheet, TextInput, View } from "react-native";
 
 import { play } from "@/audio/player";
 import { AnswerLines, Button, ChallengeHeader, SpeechBubble } from "@/components/ui";
-import { colors, layout, radii, spacing, type } from "@/design/tokens";
+import { colors, radii, spacing, type } from "@/design/tokens";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
 export interface TranslateTypeProps {
@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: layout.screenPaddingH,
     gap: spacing.lg,
   },
   inputArea: {

@@ -10,7 +10,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, ChallengeHeader, OptionCard, SpeechBubble } from "@/components/ui";
-import { layout, spacing } from "@/design/tokens";
+import { spacing } from "@/design/tokens";
 import { play } from "@/audio/player";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     gap: spacing.xl,
-    paddingHorizontal: layout.screenPaddingH,
   },
   options: {
     gap: spacing.md,

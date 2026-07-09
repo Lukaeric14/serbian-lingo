@@ -35,10 +35,10 @@ export function ScreenContainer({
   return (
     <SafeAreaView
       edges={edges}
-      style={[styles.root, { backgroundColor }, style]}
+      style={[styles.root, { backgroundColor }]}
       testID={testID}
     >
-      <View style={padded ? styles.padded : styles.unpadded}>{children}</View>
+      <View style={[padded ? styles.padded : styles.unpadded, style]}>{children}</View>
     </SafeAreaView>
   );
 }

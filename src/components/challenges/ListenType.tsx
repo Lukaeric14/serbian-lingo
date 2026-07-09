@@ -10,7 +10,7 @@ import { StyleSheet, TextInput, View } from "react-native";
 
 import { play } from "@/audio/player";
 import { AnswerLines, Button, ChallengeHeader, SpeakerButton } from "@/components/ui";
-import { colors, fonts, layout, radii, spacing, type } from "@/design/tokens";
+import { colors, fonts, radii, spacing, type } from "@/design/tokens";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
 export interface ListenTypeProps {
@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: "center",
-    paddingHorizontal: layout.screenPaddingH,
     gap: spacing.xl,
   },
   speakerRow: {

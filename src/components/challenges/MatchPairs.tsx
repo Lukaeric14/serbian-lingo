@@ -9,7 +9,7 @@
 import React, { useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ChallengeHeader, OptionCard, type OptionCardState } from "@/components/ui";
-import { layout, spacing } from "@/design/tokens";
+import { spacing } from "@/design/tokens";
 import { play } from "@/audio/player";
 import { shuffle } from "@/lib/shuffle";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
@@ -168,7 +168,6 @@ export default function MatchPairs({ challenge, onSubmit }: MatchPairsProps) {
 const styles = StyleSheet.create({
   container: {
     gap: spacing.xl,
-    paddingHorizontal: layout.screenPaddingH,
   },
   row: {
     flexDirection: "row",

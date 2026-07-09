@@ -12,7 +12,7 @@ import { StyleSheet, Text, View } from "react-native";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 import { play } from "@/audio/player";
 import { AnswerLines, Button, ChallengeHeader, Tile } from "@/components/ui";
-import { colors, layout, spacing, type } from "@/design/tokens";
+import { colors, spacing, type } from "@/design/tokens";
 import { shuffle } from "@/lib/shuffle";
 
 export type TranslateBankReverseChallenge = Extract<
@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     gap: spacing.lg,
-    paddingHorizontal: layout.screenPaddingH,
   },
   prompt: {
     fontFamily: type.title.fontFamily,

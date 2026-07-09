@@ -11,7 +11,7 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, ChallengeHeader, OptionCard, SpeakerButton } from "@/components/ui";
-import { layout, spacing } from "@/design/tokens";
+import { spacing } from "@/design/tokens";
 import { play } from "@/audio/player";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
@@ -79,8 +79,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   content: {
-    paddingHorizontal: layout.screenPaddingH,
-    paddingTop: spacing.lg,
+    flex: 1,
   },
   speakerRow: {
     alignItems: "center",

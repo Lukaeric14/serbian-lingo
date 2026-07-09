@@ -10,7 +10,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import { AnswerLines, Button, ChallengeHeader, SpeechBubble, Tile } from "@/components/ui";
-import { layout, spacing } from "@/design/tokens";
+import { spacing } from "@/design/tokens";
 import { play } from "@/audio/player";
 import { shuffle } from "@/lib/shuffle";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
@@ -117,7 +117,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     gap: spacing.xl,
-    paddingHorizontal: layout.screenPaddingH,
   },
   answerWrap: {
     justifyContent: "center",

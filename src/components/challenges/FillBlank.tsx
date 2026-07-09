@@ -11,7 +11,7 @@
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import { colors, fonts, layout, radii, spacing, type } from "@/design/tokens";
+import { colors, fonts, radii, spacing, type } from "@/design/tokens";
 import { Button, ChallengeHeader, SpeakerButton, Tile } from "@/components/ui";
 import { play } from "@/audio/player";
 import { padAfterBlank, padBeforeBlank } from "@/lib/blank-spacing";
@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: layout.screenPaddingH,
     gap: spacing.xl,
   },
   sentenceRow: {

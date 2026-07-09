@@ -10,7 +10,7 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { colors, layout, spacing, type as typeScale } from "@/design/tokens";
+import { colors, spacing, type as typeScale } from "@/design/tokens";
 import { SpeechBubble, OptionCard, Button, ChallengeHeader } from "@/components/ui";
 import { play } from "@/audio/player";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
@@ -91,7 +91,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: layout.screenPaddingH,
     paddingVertical: spacing.lg,
     gap: spacing.xl,
   },

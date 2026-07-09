@@ -338,6 +338,9 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
+    paddingHorizontal: layout.screenPaddingH,
+    paddingTop: layout.sectionGap,
+    paddingBottom: layout.screenPaddingBottom,
   },
   modalBackdrop: {
     flex: 1,
