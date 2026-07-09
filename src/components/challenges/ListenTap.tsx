@@ -10,8 +10,8 @@
 
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, OptionCard, SpeakerButton } from "@/components/ui";
-import { spacing } from "@/design/tokens";
+import { Button, ChallengeHeader, OptionCard, SpeakerButton } from "@/components/ui";
+import { layout, spacing } from "@/design/tokens";
 import { play } from "@/audio/player";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
@@ -43,20 +43,24 @@ export default function ListenTap({ challenge, onSubmit }: ListenTapProps) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.speakerRow}>
-        <SpeakerButton size="large" onPress={handleReplay} />
-      </View>
+      <View style={styles.content}>
+        <ChallengeHeader title="Tap what you hear" />
 
-      <View style={styles.grid}>
-        {options.map((option) => (
-          <View key={option} style={styles.gridItem}>
-            <OptionCard
-              label={option}
-              state={selected === option ? "selected" : "default"}
-              onPress={() => setSelected(option)}
-            />
-          </View>
-        ))}
+        <View style={styles.speakerRow}>
+          <SpeakerButton size="large" onPress={handleReplay} />
+        </View>
+
+        <View style={styles.grid}>
+          {options.map((option) => (
+            <View key={option} style={styles.gridItem}>
+              <OptionCard
+                label={option}
+                state={selected === option ? "selected" : "default"}
+                onPress={() => setSelected(option)}
+              />
+            </View>
+          ))}
+        </View>
       </View>
 
       <Button
@@ -73,7 +77,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
-    padding: spacing.lg,
+  },
+  content: {
+    paddingHorizontal: layout.screenPaddingH,
+    paddingTop: spacing.lg,
   },
   speakerRow: {
     alignItems: "center",

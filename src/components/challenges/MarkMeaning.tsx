@@ -9,8 +9,8 @@
 
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, OptionCard, SpeechBubble } from "@/components/ui";
-import { spacing } from "@/design/tokens";
+import { Button, ChallengeHeader, OptionCard, SpeechBubble } from "@/components/ui";
+import { layout, spacing } from "@/design/tokens";
 import { play } from "@/audio/player";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
@@ -41,17 +41,21 @@ export default function MarkMeaning({ challenge, onSubmit }: MarkMeaningProps) {
 
   return (
     <View style={styles.container}>
-      <SpeechBubble text={promptText} onAudioTap={handleReplay} />
+      <View style={styles.content}>
+        <ChallengeHeader title="Select the correct meaning" />
 
-      <View style={styles.options}>
-        {options.map((option) => (
-          <OptionCard
-            key={option.text}
-            label={option.text}
-            state={selectedText === option.text ? "selected" : "default"}
-            onPress={() => setSelectedText(option.text)}
-          />
-        ))}
+        <SpeechBubble text={promptText} onAudioTap={handleReplay} />
+
+        <View style={styles.options}>
+          {options.map((option) => (
+            <OptionCard
+              key={option.text}
+              label={option.text}
+              state={selectedText === option.text ? "selected" : "default"}
+              onPress={() => setSelectedText(option.text)}
+            />
+          ))}
+        </View>
       </View>
 
       <Button
@@ -67,6 +71,10 @@ export default function MarkMeaning({ challenge, onSubmit }: MarkMeaningProps) {
 const styles = StyleSheet.create({
   container: {
     gap: spacing.xl,
+  },
+  content: {
+    gap: spacing.xl,
+    paddingHorizontal: layout.screenPaddingH,
   },
   options: {
     gap: spacing.md,

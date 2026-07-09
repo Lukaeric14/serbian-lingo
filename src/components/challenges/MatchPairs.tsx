@@ -8,8 +8,8 @@
 
 import React, { useMemo, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { OptionCard, type OptionCardState } from "@/components/ui";
-import { spacing } from "@/design/tokens";
+import { ChallengeHeader, OptionCard, type OptionCardState } from "@/components/ui";
+import { layout, spacing } from "@/design/tokens";
 import { play } from "@/audio/player";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
 
@@ -139,32 +139,36 @@ export default function MatchPairs({ challenge, onSubmit }: MatchPairsProps) {
 
   return (
     <View style={styles.container} testID="match-pairs">
-      <View style={styles.column}>
-        {leftTiles.map((tile) => (
-          <OptionCard
-            key={`left-${tile.pairIndex}`}
-            testID={`match-pairs-left-tile-${tile.label}`}
-            label={tile.label}
-            state={stateFor(tile.pairIndex, "left")}
-            disabled={matched.has(tile.pairIndex)}
-            onPress={() => handleLeftPress(tile.pairIndex)}
-            onAudioTap={() => play(pairs[tile.pairIndex].sr)}
-            style={styles.tile}
-          />
-        ))}
-      </View>
-      <View style={styles.column}>
-        {rightTiles.map((tile) => (
-          <OptionCard
-            key={`right-${tile.pairIndex}`}
-            testID={`match-pairs-right-tile-${tile.label}`}
-            label={tile.label}
-            state={stateFor(tile.pairIndex, "right")}
-            disabled={matched.has(tile.pairIndex)}
-            onPress={() => handleRightPress(tile.pairIndex)}
-            style={styles.tile}
-          />
-        ))}
+      <ChallengeHeader title="Tap the matching pairs" />
+
+      <View style={styles.row}>
+        <View style={styles.column}>
+          {leftTiles.map((tile) => (
+            <OptionCard
+              key={`left-${tile.pairIndex}`}
+              testID={`match-pairs-left-tile-${tile.label}`}
+              label={tile.label}
+              state={stateFor(tile.pairIndex, "left")}
+              disabled={matched.has(tile.pairIndex)}
+              onPress={() => handleLeftPress(tile.pairIndex)}
+              onAudioTap={() => play(pairs[tile.pairIndex].sr)}
+              style={styles.tile}
+            />
+          ))}
+        </View>
+        <View style={styles.column}>
+          {rightTiles.map((tile) => (
+            <OptionCard
+              key={`right-${tile.pairIndex}`}
+              testID={`match-pairs-right-tile-${tile.label}`}
+              label={tile.label}
+              state={stateFor(tile.pairIndex, "right")}
+              disabled={matched.has(tile.pairIndex)}
+              onPress={() => handleRightPress(tile.pairIndex)}
+              style={styles.tile}
+            />
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -172,6 +176,10 @@ export default function MatchPairs({ challenge, onSubmit }: MatchPairsProps) {
 
 const styles = StyleSheet.create({
   container: {
+    gap: spacing.xl,
+    paddingHorizontal: layout.screenPaddingH,
+  },
+  row: {
     flexDirection: "row",
     gap: spacing.md,
   },
