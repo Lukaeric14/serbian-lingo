@@ -3,8 +3,9 @@
 # dependencies
 node_modules/
 
-# parallel-agent scratch worktrees (Workflow isolation:'worktree')
-.claude/worktrees/
+# local Claude Code / agent-skills runtime state (session scratch, not project source)
+.claude/
+.agents/
 
 # Expo
 .expo/

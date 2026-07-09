@@ -12,7 +12,11 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_CONVEX_URL": "https://adept-wolf-198.convex.cloud",
+        "EXPO_PUBLIC_CONVEX_SITE_URL": "https://adept-wolf-198.convex.site"
+      }
     }
   },
   "submit": {
