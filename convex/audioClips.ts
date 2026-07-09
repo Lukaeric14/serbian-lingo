@@ -11,6 +11,18 @@ export const listTexts = query({
   },
 });
 
+// Every clip's playable URL, keyed by its exact text — used by the client
+// (src/audio/player.ts's preload) to seed its playback cache. Total row
+// count is small (low hundreds), so returning everything in one query is
+// simpler than a per-lesson text lookup and costs nothing at this scale.
+export const listAll = query({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db.query("audioClips").collect();
+    return rows.map((r) => ({ text: r.text, url: r.url }));
+  },
+});
+
 // Upsert by exact text (find-or-create, patch if exists) — re-running the
 // generation pipeline never creates duplicate rows for the same surface form.
 export const upsertClip = mutation({

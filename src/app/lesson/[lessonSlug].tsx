@@ -19,6 +19,7 @@ import type { ComponentType } from "react";
 import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { getSelectedProfileId } from "@/lib/selected-profile";
+import { preload } from "@/audio/player";
 import { LessonQueue } from "@/engine/queue";
 import { gradeChallenge } from "@/engine/grading";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
@@ -122,6 +123,17 @@ export default function LessonHost() {
     lessonSlug ? { lessonSlug } : "skip",
   ) as ChallengeDoc[] | undefined;
 
+  // Every clip's playable URL — src/audio/player.ts only plays a text it was
+  // preloaded with, so this must resolve before the first challenge (whose
+  // autoplay fires on mount) is allowed to render.
+  const audioClips = useQuery(api.audioClips.listAll, {});
+  const [audioPreloaded, setAudioPreloaded] = useState(false);
+  useEffect(() => {
+    if (audioClips === undefined) return;
+    preload(audioClips.map((c) => ({ text: c.text, uri: c.url })));
+    setAudioPreloaded(true);
+  }, [audioClips]);
+
   const recordCompletion = useMutation(api.completions.recordCompletion);
 
   // Queue is built once challenges arrive; kept in a ref-backed state so mutating it
@@ -223,7 +235,7 @@ export default function LessonHost() {
 
   // --- Loading / error states ---
 
-  if (!profileLoaded || challenges === undefined) {
+  if (!profileLoaded || challenges === undefined || !audioPreloaded) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color={colors.green} />
