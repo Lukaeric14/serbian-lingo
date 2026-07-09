@@ -1,11 +1,13 @@
 // StatCard — lesson-complete stat card: colored header band + white body.
 // Used in the row of 3 stat cards on the "Lesson complete" screen: TOTAL XP
-// (gold, ⚡), QUICK (blue, time), PERFECT!/GREAT (green, accuracy %).
+// (gold, BoltIcon), QUICK (blue, ClockIcon), PERFECT!/GREAT (green, TargetIcon).
 // See docs/ui-reference.md screen anatomy §9 ("Lesson complete").
 
+import type { ComponentType } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { colors, radii, spacing, type } from "@/design/tokens";
+import { BoltIcon, ClockIcon, TargetIcon, type IconProps } from "@/components/ui/icons";
 
 export type StatCardVariant = "xp" | "time" | "accuracy";
 
@@ -21,13 +23,16 @@ const HEADER_COLOR_BY_VARIANT: Record<StatCardVariant, string> = {
   accuracy: colors.green,
 };
 
-const ICON_BY_VARIANT: Record<StatCardVariant, string> = {
-  xp: "⚡",
-  time: "🕐",
-  accuracy: "🎯",
+// Icon color matches each card's own header color so the glyph reads as an
+// extension of the colored band, sitting on the white body below it.
+const ICON_BY_VARIANT: Record<StatCardVariant, ComponentType<IconProps>> = {
+  xp: BoltIcon,
+  time: ClockIcon,
+  accuracy: TargetIcon,
 };
 
 export function StatCard({ variant, label, value }: StatCardProps) {
+  const Icon = ICON_BY_VARIANT[variant];
   return (
     <View style={styles.card}>
       <View
@@ -36,7 +41,7 @@ export function StatCard({ variant, label, value }: StatCardProps) {
         <Text style={styles.label}>{label.toUpperCase()}</Text>
       </View>
       <View style={styles.body}>
-        <Text style={styles.icon}>{ICON_BY_VARIANT[variant]}</Text>
+        <Icon size={type.title.fontSize} color={HEADER_COLOR_BY_VARIANT[variant]} />
         <Text style={styles.value}>{value}</Text>
       </View>
     </View>
@@ -68,9 +73,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: spacing.xs,
-  },
-  icon: {
-    fontSize: type.title.fontSize,
   },
   value: {
     fontFamily: type.title.fontFamily,

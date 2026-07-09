@@ -5,4 +5,6 @@ export { DumbbellIcon } from "./DumbbellIcon";
 export { CheckIcon } from "./CheckIcon";
 export { FlameIcon } from "./FlameIcon";
 export { BoltIcon } from "./BoltIcon";
+export { ClockIcon } from "./ClockIcon";
+export { TargetIcon } from "./TargetIcon";
 export type { IconProps } from "./StarIcon";
