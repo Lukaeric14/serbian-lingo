@@ -1,0 +1,398 @@
+{
+  "unit": {
+    "slug": "u3",
+    "order": 3,
+    "title": "Use basic phrases",
+    "objective": "Greet people, say please/thank you/sorry, and ask how someone is doing using fixed polite phrases.",
+    "sectionTitle": "Section 1",
+    "color": "#CE82FF"
+  },
+  "lessons": [
+    {
+      "slug": "u3-l1",
+      "order": 1,
+      "kind": "lesson",
+      "challenges": [
+        {
+          "slug": "u3-l1-c01",
+          "order": 1,
+          "type": "translate_bank",
+          "payload": {
+            "promptText": "Zdravo, Dominika!",
+            "correctAnswer": "Hello, Dominika!",
+            "wordBank": ["Hello", "Dominika", "Goodbye", "Sorry", "Thanks"]
+          },
+          "newVocabSlugs": ["zdravo"]
+        },
+        {
+          "slug": "u3-l1-c02",
+          "order": 2,
+          "type": "match_pairs",
+          "payload": {
+            "pairs": [
+              { "sr": "zdravo", "en": "hello" },
+              { "sr": "hvala", "en": "thank you" },
+              { "sr": "molim", "en": "please" },
+              { "sr": "da", "en": "yes" },
+              { "sr": "ne", "en": "no" }
+            ]
+          },
+          "newVocabSlugs": ["hvala", "molim", "da", "ne"]
+        },
+        {
+          "slug": "u3-l1-c03",
+          "order": 3,
+          "type": "listen_tap",
+          "payload": {
+            "audioText": "hvala",
+            "options": ["hvala", "molim", "zdravo", "da"]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u3-l1-c04",
+          "order": 4,
+          "type": "translate_bank",
+          "payload": {
+            "promptText": "Dobar dan, Agnieszka.",
+            "correctAnswer": "Good day, Agnieszka.",
+            "wordBank": ["Good", "day", "Agnieszka", "night", "morning"]
+          },
+          "newVocabSlugs": ["dobar-dan"]
+        },
+        {
+          "slug": "u3-l1-c05",
+          "order": 5,
+          "type": "mark_meaning",
+          "payload": {
+            "promptText": "Hvala lepo!",
+            "options": [
+              { "text": "Thanks a lot!", "correct": true },
+              { "text": "Good morning!", "correct": false },
+              { "text": "See you!", "correct": false }
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u3-l1-c06",
+          "order": 6,
+          "type": "listen_tap",
+          "payload": {
+            "audioText": "molim",
+            "options": ["molim", "hvala", "ne", "zdravo"]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u3-l1-c07",
+          "order": 7,
+          "type": "translate_bank",
+          "payload": {
+            "promptText": "Izvini, Julia!",
+            "correctAnswer": "Sorry, Julia!",
+            "wordBank": ["Sorry", "Julia", "Please", "Thanks", "Hello"]
+          },
+          "newVocabSlugs": ["izvini"]
+        },
+        {
+          "slug": "u3-l1-c08",
+          "order": 8,
+          "type": "mark_meaning",
+          "payload": {
+            "promptText": "Dobro jutro, Wieslaw!",
+            "options": [
+              { "text": "Good morning, Wieslaw!", "correct": true },
+              { "text": "Good night, Wieslaw!", "correct": false },
+              { "text": "Thank you, Wieslaw!", "correct": false }
+            ]
+          },
+          "newVocabSlugs": ["dobro-jutro"]
+        },
+        {
+          "slug": "u3-l1-c09",
+          "order": 9,
+          "type": "fill_blank",
+          "payload": {
+            "sentenceBefore": "",
+            "sentenceAfter": ", Stefane! Kako si?",
+            "fullSentenceAudioText": "Zdravo, Stefane! Kako si?",
+            "correctAnswer": "Zdravo",
+            "options": ["Zdravo", "Hvala", "Ne"]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u3-l1-c10",
+          "order": 10,
+          "type": "translate_bank",
+          "payload": {
+            "promptText": "Doviđenja, Slobodane!",
+            "correctAnswer": "Goodbye, Slobodan!",
+            "wordBank": ["Goodbye", "Slobodan", "Hello", "Sorry", "please"]
+          },
+          "newVocabSlugs": ["dovidjenja"]
+        }
+      ]
+    },
+    {
+      "slug": "u3-l2",
+      "order": 2,
+      "kind": "lesson",
+      "challenges": [
+        {
+          "slug": "u3-l2-c01",
+          "order": 1,
+          "type": "translate_bank",
+          "payload": {
+            "promptText": "Ćao, Filipe! Kako si?",
+            "correctAnswer": "Hi, Filip! How are you?",
+            "wordBank": ["Hi", "Filip", "How", "are", "you", "Goodbye"]
+          },
+          "newVocabSlugs": ["cao", "kako-si"]
+        },
+        {
+          "slug": "u3-l2-c02",
+          "order": 2,
+          "type": "mark_meaning",
+          "payload": {
+            "promptText": "Dobro sam, hvala.",
+            "options": [
+              { "text": "I'm good, thanks.", "correct": true },
+              { "text": "I'm sorry, thanks.", "correct": false },
+              { "text": "Good night, thanks.", "correct": false }
+            ]
+          },
+          "newVocabSlugs": ["dobro-sam"]
+        },
+        {
+          "slug": "u3-l2-c03",
+          "order": 3,
+          "type": "fill_blank",
+          "payload": {
+            "sentenceBefore": "Žao mi ",
+            "sentenceAfter": ", Olivero.",
+            "fullSentenceAudioText": "Žao mi je, Olivero.",
+            "correctAnswer": "je",
+            "options": ["je", "si", "smo"]
+          },
+          "newVocabSlugs": ["zao-mi-je"]
+        },
+        {
+          "slug": "u3-l2-c04",
+          "order": 4,
+          "type": "complete_translation",
+          "payload": {
+            "sourceText": "Možda sutra, Neso.",
+            "targetTemplate": "___ tomorrow, Nesa.",
+            "correctAnswer": "Maybe",
+            "options": ["Maybe", "Yes", "No"]
+          },
+          "newVocabSlugs": ["mozda"]
+        },
+        {
+          "slug": "u3-l2-c05",
+          "order": 5,
+          "type": "complete_chat",
+          "payload": {
+            "dialogue": [
+              { "speaker": "Lidija", "text": "Laku noć, Biljano!" },
+              { "speaker": "Biljana", "text": "___" }
+            ],
+            "promptQuestion": "What does Biljana say back?",
+            "options": ["Laku noć!", "Dobar dan!", "Hvala lepo!"],
+            "correctAnswer": "Laku noć!"
+          },
+          "newVocabSlugs": ["laku-noc"]
+        },
+        {
+          "slug": "u3-l2-c06",
+          "order": 6,
+          "type": "match_pairs",
+          "payload": {
+            "pairs": [
+              { "sr": "kako si", "en": "how are you" },
+              { "sr": "dobro sam", "en": "I'm good" },
+              { "sr": "žao mi je", "en": "I'm sorry" },
+              { "sr": "možda", "en": "maybe" },
+              { "sr": "laku noć", "en": "good night" }
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u3-l2-c07",
+          "order": 7,
+          "type": "translate_bank",
+          "payload": {
+            "promptText": "Vidimo se, Julia!",
+            "correctAnswer": "See you, Julia!",
+            "wordBank": ["See", "you", "Julia", "Sorry", "morning"]
+          },
+          "newVocabSlugs": ["vidimo-se"]
+        },
+        {
+          "slug": "u3-l2-c08",
+          "order": 8,
+          "type": "complete_translation",
+          "payload": {
+            "sourceText": "Hvala lepo, Wieslaw!",
+            "targetTemplate": "Thanks a ___, Wieslaw!",
+            "correctAnswer": "lot",
+            "options": ["lot", "little", "day"]
+          },
+          "newVocabSlugs": ["hvala-lepo"]
+        },
+        {
+          "slug": "u3-l2-c09",
+          "order": 9,
+          "type": "complete_chat",
+          "payload": {
+            "dialogue": [
+              { "speaker": "Filip", "text": "Hvala lepo, Agnieszka!" },
+              { "speaker": "Agnieszka", "text": "___" }
+            ],
+            "promptQuestion": "What does Agnieszka say back?",
+            "options": ["Nema na čemu!", "Žao mi je!", "Laku noć!"],
+            "correctAnswer": "Nema na čemu!"
+          },
+          "newVocabSlugs": ["nema-na-cemu"]
+        },
+        {
+          "slug": "u3-l2-c10",
+          "order": 10,
+          "type": "fill_blank",
+          "payload": {
+            "sentenceBefore": "",
+            "sentenceAfter": " sam, hvala. A ti?",
+            "fullSentenceAudioText": "Dobro sam, hvala. A ti?",
+            "correctAnswer": "Dobro",
+            "options": ["Dobro", "Možda", "Ne"]
+          },
+          "newVocabSlugs": []
+        }
+      ]
+    },
+    {
+      "slug": "u3-l3",
+      "order": 3,
+      "kind": "lesson",
+      "challenges": [
+        {
+          "slug": "u3-l3-c01",
+          "order": 1,
+          "type": "translate_bank_reverse",
+          "payload": {
+            "promptText": "Good evening, Slobodan!",
+            "correctAnswer": "Dobro veče, Slobodane!",
+            "wordBank": ["Dobro", "veče", "Slobodane", "jutro", "Hvala"]
+          },
+          "newVocabSlugs": ["dobro-vece"]
+        },
+        {
+          "slug": "u3-l3-c02",
+          "order": 2,
+          "type": "translate_type",
+          "payload": {
+            "promptText": "Kako ste, Wieslaw?",
+            "direction": "sr_to_en",
+            "correctAnswers": ["How are you, Wieslaw?", "How are you Wieslaw?"]
+          },
+          "newVocabSlugs": ["kako-ste"]
+        },
+        {
+          "slug": "u3-l3-c03",
+          "order": 3,
+          "type": "translate_bank_reverse",
+          "payload": {
+            "promptText": "Excuse me, Nesa.",
+            "correctAnswer": "Izvinite, Neso.",
+            "wordBank": ["Izvinite", "Neso", "Hvala", "Molim", "Doviđenja"]
+          },
+          "newVocabSlugs": ["izvinite"]
+        },
+        {
+          "slug": "u3-l3-c04",
+          "order": 4,
+          "type": "listen_type",
+          "payload": {
+            "audioText": "naravno",
+            "correctAnswer": "naravno"
+          },
+          "newVocabSlugs": ["naravno"]
+        },
+        {
+          "slug": "u3-l3-c05",
+          "order": 5,
+          "type": "complete_translation",
+          "payload": {
+            "sourceText": "U redu, Filipe.",
+            "targetTemplate": "___, Filip.",
+            "correctAnswer": "Okay",
+            "options": ["Okay", "Maybe", "Sorry"]
+          },
+          "newVocabSlugs": ["u-redu"]
+        },
+        {
+          "slug": "u3-l3-c06",
+          "order": 6,
+          "type": "translate_type",
+          "payload": {
+            "promptText": "Thank you too, Lidija.",
+            "direction": "en_to_sr",
+            "correctAnswers": ["Hvala takođe, Lidija.", "Hvala takodje, Lidija."]
+          },
+          "newVocabSlugs": ["takodje"]
+        },
+        {
+          "slug": "u3-l3-c07",
+          "order": 7,
+          "type": "listen_type",
+          "payload": {
+            "audioText": "izvinite",
+            "correctAnswer": "izvinite"
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u3-l3-c08",
+          "order": 8,
+          "type": "translate_bank_reverse",
+          "payload": {
+            "promptText": "Of course, Biljana!",
+            "correctAnswer": "Naravno, Biljano!",
+            "wordBank": ["Naravno", "Biljano", "Možda", "Nema", "čemu"]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u3-l3-c09",
+          "order": 9,
+          "type": "complete_chat",
+          "payload": {
+            "dialogue": [
+              { "speaker": "Olivera", "text": "Kako ste, Slobodane?" },
+              { "speaker": "Slobodan", "text": "___" }
+            ],
+            "promptQuestion": "What does Slobodan say back?",
+            "options": ["Dobro sam, hvala. A vi?", "Laku noć, hvala.", "Izvinite, molim."],
+            "correctAnswer": "Dobro sam, hvala. A vi?"
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u3-l3-c10",
+          "order": 10,
+          "type": "complete_translation",
+          "payload": {
+            "sourceText": "Doviđenja svima, vidimo se!",
+            "targetTemplate": "Goodbye everyone, see ___!",
+            "correctAnswer": "you",
+            "options": ["you", "her", "them"]
+          },
+          "newVocabSlugs": []
+        }
+      ]
+    }
+  ]
+}
