@@ -20,6 +20,7 @@ import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { getSelectedProfileId } from "@/lib/selected-profile";
 import { preload } from "@/audio/player";
+import { playCorrectSound, playIncorrectSound } from "@/audio/feedbackSounds";
 import { LessonQueue } from "@/engine/queue";
 import { gradeChallenge } from "@/engine/grading";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
@@ -207,8 +208,10 @@ export default function LessonHost() {
 
     if (result.correct) {
       setFirstAttemptCorrectCount((n) => n + 1);
+      playCorrectSound();
     } else {
       setWrongCount((n) => n + 1);
+      playIncorrectSound();
     }
 
     setLastAnswerCorrect(result.correct);
