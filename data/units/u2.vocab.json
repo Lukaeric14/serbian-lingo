@@ -1,0 +1,158 @@
+[
+  {
+    "slug": "jedan",
+    "lemma": "jedan",
+    "gloss": "one",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "dva",
+    "lemma": "dva",
+    "gloss": "two",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "tri",
+    "lemma": "tri",
+    "gloss": "three",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "cetiri",
+    "lemma": "četiri",
+    "gloss": "four",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "sestra",
+    "lemma": "sestra",
+    "gloss": "sister",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "prijatelj",
+    "lemma": "prijatelj",
+    "gloss": "friend",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "pas",
+    "lemma": "pas",
+    "gloss": "dog",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "macka",
+    "lemma": "mačka",
+    "gloss": "cat",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "knjiga",
+    "lemma": "knjiga",
+    "gloss": "book",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "kuca",
+    "lemma": "kuća",
+    "gloss": "house",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "grad",
+    "lemma": "grad",
+    "gloss": "city",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "sto",
+    "lemma": "sto",
+    "gloss": "table",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "godina",
+    "lemma": "godina",
+    "gloss": "year",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "mi-smo",
+    "lemma": "biti (mi smo)",
+    "gloss": "we are",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "vi-ste",
+    "lemma": "biti (vi ste)",
+    "gloss": "you (pl./formal) are",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "oni-su",
+    "lemma": "biti (oni/one su)",
+    "gloss": "they are",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "imamo",
+    "lemma": "imati (mi imamo)",
+    "gloss": "we have",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "imaju",
+    "lemma": "imati (oni imaju)",
+    "gloss": "they have",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "zena",
+    "lemma": "žena",
+    "gloss": "woman",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "dete",
+    "lemma": "dete",
+    "gloss": "child",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "tetka",
+    "lemma": "tetka",
+    "gloss": "aunt",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "koliko",
+    "lemma": "koliko",
+    "gloss": "how many / how much",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "imas",
+    "lemma": "imati (ti imaš)",
+    "gloss": "you (sg.) have",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "imam",
+    "lemma": "imati (ja imam)",
+    "gloss": "I have",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "dobar",
+    "lemma": "dobar",
+    "gloss": "good",
+    "introducedInUnit": "u2"
+  },
+  {
+    "slug": "ima",
+    "lemma": "imati (on/ona ima)",
+    "gloss": "he/she has",
+    "introducedInUnit": "u2"
+  }
+]

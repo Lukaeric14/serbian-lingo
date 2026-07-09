@@ -1,0 +1,637 @@
+{
+  "unit": {
+    "slug": "u2",
+    "order": 2,
+    "title": "Use the plural",
+    "objective": "Talk about more than one person or thing: plural nouns, plural 'to be', and counting 1-4.",
+    "sectionTitle": "Section 1",
+    "color": "#1CB0F6"
+  },
+  "lessons": [
+    {
+      "slug": "u2-l1",
+      "order": 1,
+      "kind": "lesson",
+      "challenges": [
+        {
+          "slug": "u2-l1-c01",
+          "order": 1,
+          "type": "translate_bank",
+          "payload": {
+            "promptText": "Dominika i Julia su sestre.",
+            "correctAnswer": "Dominika and Julia are sisters.",
+            "wordBank": [
+              "Dominika",
+              "and",
+              "Julia",
+              "are",
+              "sisters",
+              "brothers",
+              "friends",
+              "is"
+            ]
+          },
+          "newVocabSlugs": [
+            "sestra",
+            "oni-su"
+          ]
+        },
+        {
+          "slug": "u2-l1-c02",
+          "order": 2,
+          "type": "match_pairs",
+          "payload": {
+            "pairs": [
+              {
+                "sr": "jedan",
+                "en": "one"
+              },
+              {
+                "sr": "dva",
+                "en": "two"
+              },
+              {
+                "sr": "tri",
+                "en": "three"
+              },
+              {
+                "sr": "četiri",
+                "en": "four"
+              },
+              {
+                "sr": "godina",
+                "en": "year"
+              }
+            ]
+          },
+          "newVocabSlugs": [
+            "jedan",
+            "dva",
+            "tri",
+            "cetiri",
+            "godina"
+          ]
+        },
+        {
+          "slug": "u2-l1-c03",
+          "order": 3,
+          "type": "listen_tap",
+          "payload": {
+            "audioText": "sestre",
+            "options": [
+              "sestre",
+              "sestra",
+              "knjige",
+              "psi"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l1-c04",
+          "order": 4,
+          "type": "mark_meaning",
+          "payload": {
+            "promptText": "Mi smo prijatelji.",
+            "options": [
+              {
+                "text": "We are friends.",
+                "correct": true
+              },
+              {
+                "text": "You are friends.",
+                "correct": false
+              },
+              {
+                "text": "They are friends.",
+                "correct": false
+              }
+            ]
+          },
+          "newVocabSlugs": [
+            "prijatelj",
+            "mi-smo"
+          ]
+        },
+        {
+          "slug": "u2-l1-c05",
+          "order": 5,
+          "type": "translate_bank",
+          "payload": {
+            "promptText": "Stefan i Filip imaju dva psa.",
+            "correctAnswer": "Stefan and Filip have two dogs.",
+            "wordBank": [
+              "Stefan",
+              "and",
+              "Filip",
+              "have",
+              "two",
+              "dogs",
+              "three",
+              "cats"
+            ]
+          },
+          "newVocabSlugs": [
+            "pas",
+            "imaju"
+          ]
+        },
+        {
+          "slug": "u2-l1-c06",
+          "order": 6,
+          "type": "listen_tap",
+          "payload": {
+            "audioText": "knjige",
+            "options": [
+              "knjige",
+              "kuće",
+              "godine",
+              "mačke"
+            ]
+          },
+          "newVocabSlugs": [
+            "knjiga"
+          ]
+        },
+        {
+          "slug": "u2-l1-c07",
+          "order": 7,
+          "type": "match_pairs",
+          "payload": {
+            "pairs": [
+              {
+                "sr": "pas",
+                "en": "dog"
+              },
+              {
+                "sr": "mačka",
+                "en": "cat"
+              },
+              {
+                "sr": "kuća",
+                "en": "house"
+              },
+              {
+                "sr": "grad",
+                "en": "city"
+              },
+              {
+                "sr": "sto",
+                "en": "table"
+              }
+            ]
+          },
+          "newVocabSlugs": [
+            "macka",
+            "kuca",
+            "grad",
+            "sto"
+          ]
+        },
+        {
+          "slug": "u2-l1-c08",
+          "order": 8,
+          "type": "mark_meaning",
+          "payload": {
+            "promptText": "Vi ste u gradu.",
+            "options": [
+              {
+                "text": "You (plural) are in the city.",
+                "correct": true
+              },
+              {
+                "text": "We are in the city.",
+                "correct": false
+              },
+              {
+                "text": "They are in the city.",
+                "correct": false
+              }
+            ]
+          },
+          "newVocabSlugs": [
+            "vi-ste"
+          ]
+        },
+        {
+          "slug": "u2-l1-c09",
+          "order": 9,
+          "type": "translate_bank",
+          "payload": {
+            "promptText": "One su mačke.",
+            "correctAnswer": "They are cats.",
+            "wordBank": [
+              "They",
+              "are",
+              "cats",
+              "dogs",
+              "friends",
+              "is"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l1-c10",
+          "order": 10,
+          "type": "listen_tap",
+          "payload": {
+            "audioText": "grad",
+            "options": [
+              "grad",
+              "sto",
+              "pas",
+              "prijatelj"
+            ]
+          },
+          "newVocabSlugs": []
+        }
+      ]
+    },
+    {
+      "slug": "u2-l2",
+      "order": 2,
+      "kind": "lesson",
+      "challenges": [
+        {
+          "slug": "u2-l2-c01",
+          "order": 1,
+          "type": "translate_bank",
+          "payload": {
+            "promptText": "Agnieszka i Wieslaw imaju kuću u gradu.",
+            "correctAnswer": "Agnieszka and Wieslaw have a house in the city.",
+            "wordBank": [
+              "Agnieszka",
+              "and",
+              "Wieslaw",
+              "have",
+              "a",
+              "house",
+              "in",
+              "the",
+              "city",
+              "table"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l2-c02",
+          "order": 2,
+          "type": "fill_blank",
+          "payload": {
+            "sentenceBefore": "Olivera i Slobodan",
+            "sentenceAfter": "dve mačke.",
+            "fullSentenceAudioText": "Olivera i Slobodan imaju dve mačke.",
+            "correctAnswer": "imaju",
+            "options": [
+              "imaju",
+              "imamo",
+              "su",
+              "smo"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l2-c03",
+          "order": 3,
+          "type": "complete_translation",
+          "payload": {
+            "sourceText": "Mi imamo tri mačke.",
+            "targetTemplate": "We ___ three cats.",
+            "correctAnswer": "have",
+            "options": [
+              "have",
+              "are",
+              "has",
+              "is"
+            ]
+          },
+          "newVocabSlugs": [
+            "imamo"
+          ]
+        },
+        {
+          "slug": "u2-l2-c04",
+          "order": 4,
+          "type": "match_pairs",
+          "payload": {
+            "pairs": [
+              {
+                "sr": "žene",
+                "en": "women"
+              },
+              {
+                "sr": "deca",
+                "en": "children"
+              },
+              {
+                "sr": "psi",
+                "en": "dogs"
+              },
+              {
+                "sr": "gradovi",
+                "en": "cities"
+              },
+              {
+                "sr": "stolovi",
+                "en": "tables"
+              }
+            ]
+          },
+          "newVocabSlugs": [
+            "zena",
+            "dete"
+          ]
+        },
+        {
+          "slug": "u2-l2-c05",
+          "order": 5,
+          "type": "listen_tap",
+          "payload": {
+            "audioText": "deca",
+            "options": [
+              "deca",
+              "žene",
+              "psi",
+              "sestre"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l2-c06",
+          "order": 6,
+          "type": "mark_meaning",
+          "payload": {
+            "promptText": "Lidija i Biljana su tetke.",
+            "options": [
+              {
+                "text": "Lidija and Biljana are aunts.",
+                "correct": true
+              },
+              {
+                "text": "Lidija and Biljana are sisters.",
+                "correct": false
+              },
+              {
+                "text": "Lidija and Biljana are friends.",
+                "correct": false
+              }
+            ]
+          },
+          "newVocabSlugs": [
+            "tetka"
+          ]
+        },
+        {
+          "slug": "u2-l2-c07",
+          "order": 7,
+          "type": "complete_chat",
+          "payload": {
+            "dialogue": [
+              {
+                "speaker": "Nesa",
+                "text": "Koliko imaš pasa?"
+              },
+              {
+                "speaker": "Filip",
+                "text": "Imam četiri psa."
+              }
+            ],
+            "promptQuestion": "How many dogs does Filip say he has?",
+            "options": [
+              "Four.",
+              "Two.",
+              "Three."
+            ],
+            "correctAnswer": "Four."
+          },
+          "newVocabSlugs": [
+            "koliko",
+            "imas",
+            "imam"
+          ]
+        },
+        {
+          "slug": "u2-l2-c08",
+          "order": 8,
+          "type": "fill_blank",
+          "payload": {
+            "sentenceBefore": "One",
+            "sentenceAfter": "sestre iz Poljske.",
+            "fullSentenceAudioText": "One su sestre iz Poljske.",
+            "correctAnswer": "su",
+            "options": [
+              "su",
+              "smo",
+              "ste",
+              "je"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l2-c09",
+          "order": 9,
+          "type": "translate_bank",
+          "payload": {
+            "promptText": "Koliko godina imaš?",
+            "correctAnswer": "How old are you?",
+            "wordBank": [
+              "How",
+              "old",
+              "are",
+              "you",
+              "many",
+              "years",
+              "he",
+              "is"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l2-c10",
+          "order": 10,
+          "type": "complete_translation",
+          "payload": {
+            "sourceText": "Oni su prijatelji već pet godina.",
+            "targetTemplate": "They have been ___ for five years.",
+            "correctAnswer": "friends",
+            "options": [
+              "friends",
+              "sisters",
+              "dogs",
+              "cats"
+            ]
+          },
+          "newVocabSlugs": []
+        }
+      ]
+    },
+    {
+      "slug": "u2-l3",
+      "order": 3,
+      "kind": "lesson",
+      "challenges": [
+        {
+          "slug": "u2-l3-c01",
+          "order": 1,
+          "type": "translate_bank_reverse",
+          "payload": {
+            "promptText": "We are sisters.",
+            "correctAnswer": "Mi smo sestre.",
+            "wordBank": [
+              "Mi",
+              "smo",
+              "sestre",
+              "ste",
+              "prijatelji",
+              "su"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l3-c02",
+          "order": 2,
+          "type": "listen_type",
+          "payload": {
+            "audioText": "psi",
+            "correctAnswer": "psi"
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l3-c03",
+          "order": 3,
+          "type": "translate_type",
+          "payload": {
+            "promptText": "Dva grada.",
+            "direction": "sr_to_en",
+            "correctAnswers": [
+              "Two cities.",
+              "Two cities"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l3-c04",
+          "order": 4,
+          "type": "translate_bank_reverse",
+          "payload": {
+            "promptText": "Julia has three cats.",
+            "correctAnswer": "Julia ima tri mačke.",
+            "wordBank": [
+              "Julia",
+              "ima",
+              "tri",
+              "mačke",
+              "dve",
+              "psa",
+              "četiri"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l3-c05",
+          "order": 5,
+          "type": "complete_translation",
+          "payload": {
+            "sourceText": "Vi ste dobri prijatelji.",
+            "targetTemplate": "You (plural) ___ good friends.",
+            "correctAnswer": "are",
+            "options": [
+              "are",
+              "is",
+              "have",
+              "am"
+            ]
+          },
+          "newVocabSlugs": [
+            "dobar"
+          ]
+        },
+        {
+          "slug": "u2-l3-c06",
+          "order": 6,
+          "type": "translate_type",
+          "payload": {
+            "promptText": "We have one house and two cats.",
+            "direction": "en_to_sr",
+            "correctAnswers": [
+              "Mi imamo jednu kuću i dve mačke.",
+              "Imamo jednu kuću i dve mačke."
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l3-c07",
+          "order": 7,
+          "type": "listen_type",
+          "payload": {
+            "audioText": "godine",
+            "correctAnswer": "godine"
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l3-c08",
+          "order": 8,
+          "type": "translate_bank_reverse",
+          "payload": {
+            "promptText": "Slobodan and Nesa are friends.",
+            "correctAnswer": "Slobodan i Nesa su prijatelji.",
+            "wordBank": [
+              "Slobodan",
+              "i",
+              "Nesa",
+              "su",
+              "prijatelji",
+              "smo",
+              "sestre"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u2-l3-c09",
+          "order": 9,
+          "type": "translate_type",
+          "payload": {
+            "promptText": "Biljana has four books.",
+            "direction": "en_to_sr",
+            "correctAnswers": [
+              "Biljana ima četiri knjige."
+            ]
+          },
+          "newVocabSlugs": [
+            "ima"
+          ]
+        },
+        {
+          "slug": "u2-l3-c10",
+          "order": 10,
+          "type": "complete_translation",
+          "payload": {
+            "sourceText": "Dominika i ja imamo jednu kuću.",
+            "targetTemplate": "Dominika and I ___ one house.",
+            "correctAnswer": "have",
+            "options": [
+              "have",
+              "are",
+              "has",
+              "is"
+            ]
+          },
+          "newVocabSlugs": []
+        }
+      ]
+    }
+  ]
+}
