@@ -1,0 +1,116 @@
+[
+  {
+    "slug": "zdravo",
+    "lemma": "zdravo",
+    "gloss": "hello",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "cao",
+    "lemma": "ćao",
+    "gloss": "hi / bye (informal)",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "dobar-dan",
+    "lemma": "dobar dan",
+    "gloss": "good day / hello (formal)",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "dovidjenja",
+    "lemma": "doviđenja",
+    "gloss": "goodbye",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "ja",
+    "lemma": "ja",
+    "gloss": "I",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "ti",
+    "lemma": "ti",
+    "gloss": "you (singular, informal)",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "on",
+    "lemma": "on",
+    "gloss": "he",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "ona",
+    "lemma": "ona",
+    "gloss": "she",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "biti",
+    "lemma": "biti",
+    "gloss": "to be",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "da",
+    "lemma": "da",
+    "gloss": "yes",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "ne",
+    "lemma": "ne",
+    "gloss": "no / not",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "covek",
+    "lemma": "čovek",
+    "gloss": "man",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "zena",
+    "lemma": "žena",
+    "gloss": "woman",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "voda",
+    "lemma": "voda",
+    "gloss": "water",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "hleb",
+    "lemma": "hleb",
+    "gloss": "bread",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "i",
+    "lemma": "i",
+    "gloss": "and",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "ovde",
+    "lemma": "ovde",
+    "gloss": "here",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "a",
+    "lemma": "a",
+    "gloss": "and / but (contrastive)",
+    "introducedInUnit": "u1"
+  },
+  {
+    "slug": "student",
+    "lemma": "student",
+    "gloss": "student (male)",
+    "introducedInUnit": "u1"
+  }
+]

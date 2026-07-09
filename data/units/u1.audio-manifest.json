@@ -1,0 +1,198 @@
+[
+  {
+    "text": "Biljana i Nesa su ovde.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Dobar dan! Ja sam Agnješka.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Dominika je ovde, a Julia nije ovde.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Doviđenja, Julia!",
+    "kind": "sentence"
+  },
+  {
+    "text": "Filip je ovde, a Neša nije.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ja sam Dominika.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ja sam Slobodan.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ja sam Vjeslav.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ja sam ovde.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ne, hleb.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ne, ja nisam Dominika.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ne, ja sam Julia.",
+    "kind": "sentence"
+  },
+  {
+    "text": "On je Stefan.",
+    "kind": "sentence"
+  },
+  {
+    "text": "On je ovde.",
+    "kind": "sentence"
+  },
+  {
+    "text": "On je voda.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ona je žena, a ja sam ovde.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ona je žena.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ona nije ovde, on je ovde.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ti si Lidija.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ti si Slobodan.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ti si ovde, a on nije.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ti si student.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Voda i hleb su ovde.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Zdravo!",
+    "kind": "sentence"
+  },
+  {
+    "text": "Zdravo! Ja sam Olivera.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Zdravo, ja sam Stefan, a on je Filip.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ćao, Olivera!",
+    "kind": "sentence"
+  },
+  {
+    "text": "Dominika",
+    "kind": "word"
+  },
+  {
+    "text": "Ja",
+    "kind": "word"
+  },
+  {
+    "text": "Ne",
+    "kind": "word"
+  },
+  {
+    "text": "Ona",
+    "kind": "word"
+  },
+  {
+    "text": "a",
+    "kind": "word"
+  },
+  {
+    "text": "da",
+    "kind": "word"
+  },
+  {
+    "text": "doviđenja",
+    "kind": "word"
+  },
+  {
+    "text": "hleb",
+    "kind": "word"
+  },
+  {
+    "text": "ja",
+    "kind": "word"
+  },
+  {
+    "text": "je",
+    "kind": "word"
+  },
+  {
+    "text": "ne",
+    "kind": "word"
+  },
+  {
+    "text": "nisam",
+    "kind": "word"
+  },
+  {
+    "text": "on",
+    "kind": "word"
+  },
+  {
+    "text": "ona",
+    "kind": "word"
+  },
+  {
+    "text": "ovde",
+    "kind": "word"
+  },
+  {
+    "text": "sam",
+    "kind": "word"
+  },
+  {
+    "text": "si",
+    "kind": "word"
+  },
+  {
+    "text": "ti",
+    "kind": "word"
+  },
+  {
+    "text": "voda",
+    "kind": "word"
+  },
+  {
+    "text": "ćao",
+    "kind": "word"
+  },
+  {
+    "text": "čovek",
+    "kind": "word"
+  },
+  {
+    "text": "žena",
+    "kind": "word"
+  }
+]
