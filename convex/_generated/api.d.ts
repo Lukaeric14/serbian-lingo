@@ -8,13 +8,27 @@
  * @module
  */
 
+import type * as challengeText from "../challengeText.js";
+import type * as completions from "../completions.js";
+import type * as lessons from "../lessons.js";
+import type * as path from "../path.js";
+import type * as profiles from "../profiles.js";
+import type * as units from "../units.js";
+
 import type {
   ApiFromModules,
   FilterApi,
   FunctionReference,
 } from "convex/server";
 
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  challengeText: typeof challengeText;
+  completions: typeof completions;
+  lessons: typeof lessons;
+  path: typeof path;
+  profiles: typeof profiles;
+  units: typeof units;
+}>;
 
 /**
  * A utility for referencing Convex functions in your app's public API.

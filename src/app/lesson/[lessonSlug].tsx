@@ -176,7 +176,7 @@ export default function LessonHost() {
         xpEarned: String(result?.xpEarned ?? xpEarned),
         accuracy: String(accuracy),
         durationSec: String(durationSec),
-        newStreak: String(result?.newStreak ?? ""),
+        streak: String(result?.newStreak ?? ""),
         streakIsNew: String(result?.streakIsNew ?? false),
       },
     });

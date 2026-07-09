@@ -89,7 +89,9 @@ export default function PathScreen() {
       {path.map((unit) => (
         <View key={unit.slug} style={styles.unitBlock}>
           <View style={[styles.banner, { backgroundColor: unit.color }]}>
-            <Text style={styles.bannerSection}>{unit.slug.toUpperCase()}</Text>
+            <Text style={styles.bannerSection}>
+              {unit.sectionTitle.toUpperCase()}, UNIT {unit.order}
+            </Text>
             <Text style={styles.bannerTitle}>{unit.title}</Text>
           </View>
 

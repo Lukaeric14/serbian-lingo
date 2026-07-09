@@ -59,6 +59,7 @@ export const getPath = query({
         slug: unit.slug,
         title: unit.title,
         objective: unit.objective,
+        sectionTitle: unit.sectionTitle,
         color: unit.color,
         order: unit.order,
         lessons: lessonsWithStatus,
