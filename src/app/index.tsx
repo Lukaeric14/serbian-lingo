@@ -11,6 +11,8 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "../../convex/_generated/dataModel";
 import { setSelectedProfileId } from "@/lib/selected-profile";
+import { ScreenContainer } from "@/components/ui";
+import { BoltIcon, FlameIcon } from "@/components/ui/icons";
 import { colors, radii, spacing, type } from "@/design/tokens";
 
 export default function ProfilePicker() {
@@ -31,7 +33,7 @@ export default function ProfilePicker() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer style={styles.container}>
       <Text style={styles.heading}>Who&apos;s learning?</Text>
 
       {profiles === undefined ? (
@@ -47,7 +49,7 @@ export default function ProfilePicker() {
           ))}
         </View>
       )}
-    </View>
+    </ScreenContainer>
   );
 }
 
@@ -67,11 +69,11 @@ function ProfileCard({
       <Text style={styles.name}>{profile.name}</Text>
       <View style={styles.statsRow}>
         <View style={styles.stat}>
-          <Text style={styles.statIcon}>🔥</Text>
+          <FlameIcon size={type.body.fontSize} />
           <Text style={styles.statValue}>{profile.currentStreak}</Text>
         </View>
         <View style={styles.stat}>
-          <Text style={styles.statIcon}>⚡</Text>
+          <BoltIcon size={type.body.fontSize} />
           <Text style={styles.statValue}>{profile.xpTotal} XP</Text>
         </View>
       </View>
@@ -81,11 +83,8 @@ function ProfileCard({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: colors.background,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: spacing.xl,
     gap: spacing.xl,
   },
   heading: {
@@ -130,9 +129,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.xs,
-  },
-  statIcon: {
-    fontSize: type.body.fontSize,
   },
   statValue: {
     fontFamily: type.body.fontFamily,
