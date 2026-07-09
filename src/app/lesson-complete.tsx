@@ -6,12 +6,19 @@
 //
 // See docs/ui-reference.md screen anatomy §9 ("Lesson complete"): celebration heading,
 // row of 3 StatCards (XP / time / accuracy), blue CONTINUE button.
+//
+// Margin convention (see src/app/path.tsx / src/app/lesson/[lessonSlug].tsx): content
+// (celebration + stat cards) gets horizontal margin via layout.screenPaddingH, but the
+// full-width primary CONTINUE button stays full-bleed edge-to-edge — so this screen pads
+// its content area directly rather than wrapping the whole thing in ScreenContainer.
 
 import { router, useLocalSearchParams } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Button, StatCard } from "@/components/ui";
-import { colors, spacing, type } from "@/design/tokens";
+import { StarIcon } from "@/components/ui/icons";
+import { colors, glow, layout, radii, spacing, type } from "@/design/tokens";
 
 function formatDuration(totalSeconds: number): string {
   const minutes = Math.floor(totalSeconds / 60);
@@ -56,22 +63,26 @@ export default function LessonCompleteScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.celebration}>
-        <Text style={styles.emoji}>🎉</Text>
-        <Text style={styles.heading}>Lesson complete!</Text>
-      </View>
+    <SafeAreaView edges={["top", "bottom"]} style={styles.container}>
+      <View style={styles.content}>
+        <View style={styles.celebration}>
+          <View style={styles.starGlow}>
+            <StarIcon size={72} color={colors.gold} />
+          </View>
+          <Text style={styles.heading}>Lesson complete!</Text>
+        </View>
 
-      <View style={styles.statsRow}>
-        <StatCard variant="xp" label="Total XP" value={`${xpEarned}`} />
-        <StatCard variant="time" label="Quick" value={formatDuration(durationSec)} />
-        <StatCard variant="accuracy" label={accuracyLabel} value={`${accuracyPercent}%`} />
+        <View style={styles.statsRow}>
+          <StatCard variant="xp" label="Total XP" value={`${xpEarned}`} />
+          <StatCard variant="time" label="Quick" value={formatDuration(durationSec)} />
+          <StatCard variant="accuracy" label={accuracyLabel} value={`${accuracyPercent}%`} />
+        </View>
       </View>
 
       <View style={styles.footer}>
         <Button variant="blue" label="Continue" onPress={handleContinue} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -79,17 +90,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-    paddingHorizontal: spacing.xl,
     paddingVertical: spacing.xxl,
     justifyContent: "space-between",
+  },
+  content: {
+    paddingHorizontal: layout.screenPaddingH,
+    gap: spacing.xxl,
   },
   celebration: {
     alignItems: "center",
     gap: spacing.md,
     marginTop: spacing.xxl,
   },
-  emoji: {
-    fontSize: 72,
+  starGlow: {
+    ...glow.gold,
+    borderRadius: radii.pill,
   },
   heading: {
     fontFamily: type.heading.fontFamily,
