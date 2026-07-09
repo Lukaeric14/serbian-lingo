@@ -22,6 +22,7 @@ import { getSelectedProfileId } from "@/lib/selected-profile";
 import { LessonQueue } from "@/engine/queue";
 import { gradeChallenge } from "@/engine/grading";
 import type { Challenge, ChallengeAnswer } from "@/engine/grading";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ProgressBar, FeedbackSheet } from "@/components/ui";
 import {
   TranslateBank,
@@ -35,7 +36,7 @@ import {
   ListenTap,
   ListenType,
 } from "@/components/challenges";
-import { colors, spacing, type } from "@/design/tokens";
+import { colors, layout, spacing, type } from "@/design/tokens";
 
 // One renderer per SPEC.md §4 challenge type. `any` props here because each renderer's
 // `challenge`/`onSubmit` are narrowed to its own type-tagged union member (via
@@ -262,7 +263,7 @@ export default function LessonHost() {
   } as Challenge;
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
       <View style={styles.header}>
         <Pressable
           onPress={() => router.back()}
@@ -299,7 +300,7 @@ export default function LessonHost() {
           ) : null}
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -323,8 +324,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.md,
-    paddingHorizontal: spacing.lg,
-    paddingTop: spacing.lg,
+    paddingHorizontal: layout.screenPaddingH,
+    paddingTop: layout.screenPaddingTop,
     paddingBottom: spacing.md,
   },
   quitGlyph: {
