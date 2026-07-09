@@ -622,6 +622,344 @@
           "newVocabSlugs": []
         }
       ]
+    },
+    {
+      "slug": "u1-l4",
+      "order": 4,
+      "kind": "lesson",
+      "challenges": [
+        {
+          "slug": "u1-l4-c01",
+          "order": 1,
+          "type": "translate_bank_reverse",
+          "payload": {
+            "promptText": "Dominika is a woman, and Filip is a man.",
+            "correctAnswer": "Dominika je žena, a Filip je čovek.",
+            "wordBank": [
+              "Dominika",
+              "je",
+              "žena,",
+              "a",
+              "Filip",
+              "je",
+              "čovek.",
+              "nije",
+              "voda"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l4-c02",
+          "order": 2,
+          "type": "listen_type",
+          "payload": {
+            "audioText": "student",
+            "correctAnswer": "student"
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l4-c03",
+          "order": 3,
+          "type": "complete_translation",
+          "payload": {
+            "sourceText": "Ja sam ovde, a ti nisi.",
+            "targetTemplate": "I am here, and you ___ not.",
+            "correctAnswer": "are",
+            "options": [
+              "are",
+              "is",
+              "am",
+              "no"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l4-c04",
+          "order": 4,
+          "type": "translate_type",
+          "payload": {
+            "promptText": "Good day! I am Wieslaw.",
+            "direction": "en_to_sr",
+            "correctAnswers": [
+              "Dobar dan! Ja sam Vjeslav.",
+              "Dobar dan! Ja sam Vjeslav"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l4-c05",
+          "order": 5,
+          "type": "translate_bank_reverse",
+          "payload": {
+            "promptText": "Bread and water are here.",
+            "correctAnswer": "Hleb i voda su ovde.",
+            "wordBank": [
+              "Hleb",
+              "i",
+              "voda",
+              "su",
+              "ovde.",
+              "je",
+              "nisu"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l4-c06",
+          "order": 6,
+          "type": "listen_type",
+          "payload": {
+            "audioText": "doviđenja",
+            "correctAnswer": "doviđenja"
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l4-c07",
+          "order": 7,
+          "type": "fill_blank",
+          "payload": {
+            "sentenceBefore": "Ona",
+            "sentenceAfter": "student.",
+            "fullSentenceAudioText": "Ona je student.",
+            "correctAnswer": "je",
+            "options": [
+              "je",
+              "sam",
+              "si",
+              "ne"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l4-c08",
+          "order": 8,
+          "type": "complete_translation",
+          "payload": {
+            "sourceText": "Ćao! Ja sam Lidija, a on je Nesa.",
+            "targetTemplate": "Hi! I am Lidija, and ___ is Nesa.",
+            "correctAnswer": "he",
+            "options": [
+              "he",
+              "she",
+              "you",
+              "I"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l4-c09",
+          "order": 9,
+          "type": "translate_type",
+          "payload": {
+            "promptText": "She is not a student.",
+            "direction": "en_to_sr",
+            "correctAnswers": [
+              "Ona nije student.",
+              "Ona nije student"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l4-c10",
+          "order": 10,
+          "type": "translate_bank_reverse",
+          "payload": {
+            "promptText": "Yes, Julia is here, and Agnieszka is here too.",
+            "correctAnswer": "Da, Julia je ovde, a i Agnješka je ovde.",
+            "wordBank": [
+              "Da,",
+              "Julia",
+              "je",
+              "ovde,",
+              "a",
+              "i",
+              "Agnješka",
+              "je",
+              "ovde.",
+              "ne",
+              "nije"
+            ]
+          },
+          "newVocabSlugs": []
+        }
+      ]
+    },
+    {
+      "slug": "u1-l5",
+      "order": 5,
+      "kind": "lesson",
+      "challenges": [
+        {
+          "slug": "u1-l5-c01",
+          "order": 1,
+          "type": "translate_type",
+          "payload": {
+            "promptText": "Goodbye, Stefan!",
+            "direction": "en_to_sr",
+            "correctAnswers": [
+              "Doviđenja, Stefan!",
+              "Doviđenja, Stefan"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l5-c02",
+          "order": 2,
+          "type": "translate_bank_reverse",
+          "payload": {
+            "promptText": "Olivera is here, and Slobodan is not.",
+            "correctAnswer": "Olivera je ovde, a Slobodan nije.",
+            "wordBank": [
+              "Olivera",
+              "je",
+              "ovde,",
+              "a",
+              "Slobodan",
+              "nije.",
+              "ne",
+              "da"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l5-c03",
+          "order": 3,
+          "type": "listen_type",
+          "payload": {
+            "audioText": "čovek",
+            "correctAnswer": "čovek"
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l5-c04",
+          "order": 4,
+          "type": "complete_translation",
+          "payload": {
+            "sourceText": "Zdravo, Biljana! Ti si ovde, a Filip nije.",
+            "targetTemplate": "Hello, Biljana! You ___ here, and Filip is not.",
+            "correctAnswer": "are",
+            "options": [
+              "are",
+              "is",
+              "am",
+              "no"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l5-c05",
+          "order": 5,
+          "type": "translate_type",
+          "payload": {
+            "promptText": "I am not a woman, I am a man.",
+            "direction": "en_to_sr",
+            "correctAnswers": [
+              "Ja nisam žena, ja sam čovek.",
+              "Ja nisam žena, ja sam čovek"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l5-c06",
+          "order": 6,
+          "type": "listen_type",
+          "payload": {
+            "audioText": "ovde",
+            "correctAnswer": "ovde"
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l5-c07",
+          "order": 7,
+          "type": "translate_bank_reverse",
+          "payload": {
+            "promptText": "Lidija is a student, and Nesa is a student too.",
+            "correctAnswer": "Lidija je student, a i Neša je student.",
+            "wordBank": [
+              "Lidija",
+              "je",
+              "student,",
+              "a",
+              "i",
+              "Neša",
+              "je",
+              "student.",
+              "nije"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l5-c08",
+          "order": 8,
+          "type": "fill_blank",
+          "payload": {
+            "sentenceBefore": "Dobar dan! Ja",
+            "sentenceAfter": "Olivera.",
+            "fullSentenceAudioText": "Dobar dan! Ja sam Olivera.",
+            "correctAnswer": "sam",
+            "options": [
+              "sam",
+              "si",
+              "je",
+              "ne"
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l5-c09",
+          "order": 9,
+          "type": "mark_meaning",
+          "payload": {
+            "promptText": "Ćao! Ja sam Dominika, a Julia je ovde.",
+            "options": [
+              {
+                "text": "Hi! I am Dominika, and Julia is here.",
+                "correct": true
+              },
+              {
+                "text": "Hi! I am Julia, and Dominika is here.",
+                "correct": false
+              },
+              {
+                "text": "Goodbye! Dominika and Julia are not here.",
+                "correct": false
+              }
+            ]
+          },
+          "newVocabSlugs": []
+        },
+        {
+          "slug": "u1-l5-c10",
+          "order": 10,
+          "type": "translate_type",
+          "payload": {
+            "promptText": "Yes, Agnieszka and Wieslaw are here.",
+            "direction": "en_to_sr",
+            "correctAnswers": [
+              "Da, Agnješka i Vjeslav su ovde.",
+              "Da, Agnješka i Vjeslav su ovde"
+            ]
+          },
+          "newVocabSlugs": []
+        }
+      ]
     }
   ]
 }

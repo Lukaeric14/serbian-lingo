@@ -194,5 +194,73 @@
   {
     "text": "žena",
     "kind": "word"
+  },
+  {
+    "text": "Dominika je žena, a Filip je čovek.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ja sam ovde, a ti nisi.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Dobar dan! Ja sam Vjeslav.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Hleb i voda su ovde.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ona je student.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ćao! Ja sam Lidija, a on je Nesa.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ona nije student.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Da, Julia je ovde, a i Agnješka je ovde.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Doviđenja, Stefan!",
+    "kind": "sentence"
+  },
+  {
+    "text": "Olivera je ovde, a Slobodan nije.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Zdravo, Biljana! Ti si ovde, a Filip nije.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ja nisam žena, ja sam čovek.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Lidija je student, a i Neša je student.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Dobar dan! Ja sam Olivera.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Ćao! Ja sam Dominika, a Julia je ovde.",
+    "kind": "sentence"
+  },
+  {
+    "text": "Da, Agnješka i Vjeslav su ovde.",
+    "kind": "sentence"
+  },
+  {
+    "text": "student",
+    "kind": "word"
   }
 ]
