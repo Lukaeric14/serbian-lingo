@@ -1,0 +1,71 @@
+{
+  "source": "duolingodata.com/dat/plfen67v2.html — Duolingo 'Polish from English' current learning path, Section 1 (CEFR Intro), fetched 2026-07-09",
+  "note": "Scope-and-sequence guide, not gospel (SPEC.md §3) — unit objectives are verified from the live current-path source; per-unit vocab/grammar below is our own reasonable elaboration for the Serbian course, informed by the objective text and the legacy duome.eu skill-name conventions (Basics, Common Phrases, Animals, Food, etc.). Luka's native-speaker QA on units 1-3's actual generated content (item 4) is the real correctness gate — this file only sets scope, not literal Serbian sentences.",
+  "sectionTitle": "Section 1",
+  "cefr": "Intro",
+  "units": [
+    {
+      "slug": "u1",
+      "order": 1,
+      "title": "Form basic sentences",
+      "vocabFocus": ["greetings", "pronouns (I/you/he/she)", "to be (present tense, singular)", "yes/no", "simple nouns: man, woman, water, bread"],
+      "grammarFocus": ["subject pronouns", "present tense of 'to be' (biti)", "basic word order"]
+    },
+    {
+      "slug": "u2",
+      "order": 2,
+      "title": "Use the plural",
+      "vocabFocus": ["common nouns in singular/plural pairs", "numbers 1-4"],
+      "grammarFocus": ["plural noun endings (intro)", "plural of 'to be'"]
+    },
+    {
+      "slug": "u3",
+      "order": 3,
+      "title": "Use basic phrases",
+      "vocabFocus": ["please/thank you/sorry", "yes/no/maybe", "common greetings and farewells", "how are you"],
+      "grammarFocus": ["polite fixed phrases", "basic question intonation"]
+    },
+    {
+      "slug": "u4",
+      "order": 4,
+      "title": "Describe animals",
+      "vocabFocus": ["common animals: dog, cat, bird, fish, horse", "colors", "big/small"],
+      "grammarFocus": ["adjective agreement with gender (intro)"]
+    },
+    {
+      "slug": "u5",
+      "order": 5,
+      "title": "Talk about food",
+      "vocabFocus": ["food and drink: bread, water, coffee, milk, apple", "to eat / to drink (present tense)"],
+      "grammarFocus": ["accusative case for direct objects (intro) — this is where displayed word forms start diverging from lemmas, e.g. 'vodu' not 'voda'"]
+    },
+    {
+      "slug": "u6",
+      "order": 6,
+      "title": "Discuss people and animals",
+      "vocabFocus": ["family members", "possessives (my/your)", "people vs animals vocabulary"],
+      "grammarFocus": ["possessive pronouns", "gendered nouns for people"]
+    },
+    {
+      "slug": "u7",
+      "order": 7,
+      "title": "Use demonstratives",
+      "vocabFocus": ["this/that (near/far)", "pointing things out"],
+      "grammarFocus": ["demonstrative pronouns agreeing with noun gender"]
+    },
+    {
+      "slug": "u8",
+      "order": 8,
+      "title": "Describe people and things",
+      "vocabFocus": ["adjectives: tall/short, old/young, good/bad", "describing appearance"],
+      "grammarFocus": ["adjective placement and agreement"]
+    },
+    {
+      "slug": "u9",
+      "order": 9,
+      "title": "Form the plural",
+      "vocabFocus": ["broader plural vocabulary", "quantity words: many/few/some"],
+      "grammarFocus": ["plural noun endings (full pattern, building on unit 2)"]
+    }
+  ]
+}
