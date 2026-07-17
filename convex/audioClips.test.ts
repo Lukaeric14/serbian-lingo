@@ -2,9 +2,37 @@
 // correctly — against convex-test's in-memory backend, no live deployment needed.
 // See convex/units.test.ts for the established pattern this file follows.
 
-import { convexTest } from "convex-test";
 import { anyApi } from "convex/server";
 import schema from "./schema";
+
+// convex-test must be loaded bypassing Jest's Babel transform (see loadConvexTest below):
+// under the SDK 54 toolchain, babel-preset-expo ships a new import-meta-transform-plugin
+// that hard-throws on any `import.meta` for non-web callers unless
+// `unstable_transformImportMeta` is set — and convex-test/dist/index.js's fallback default
+// (`specifiedModules ?? import.meta.glob(...)`) trips it at *parse* time, before the
+// `??` even matters at runtime. This isn't a convex-test or audioClips.ts bug: plain Node
+// (and SDK 57's babel-preset-expo, which has no such plugin) load the same file fine.
+// See convex/profiles.test.ts for the same workaround applied there first.
+const { convexTest } = loadConvexTest();
+
+// Loads convex-test's real, unmodified dist/index.js through Node's own CJS module
+// system instead of Jest's module registry, so Babel/babel-preset-expo never sees it.
+// package.json's transformIgnorePatterns intentionally whitelists "convex-test" for
+// transform (it needs ESM->CJS conversion in the general case), so this can't be fixed
+// via jest config from inside this file — this loader is the test-file-local workaround.
+function loadConvexTest(): typeof import("convex-test") {
+  const fs = require("fs");
+  const path = require("path");
+  const Module = require("module");
+
+  const fullPath = require.resolve("convex-test");
+  const source = fs.readFileSync(fullPath, "utf8");
+  const mod = new Module(fullPath, module);
+  mod.filename = fullPath;
+  mod.paths = Module._nodeModulePaths(path.dirname(fullPath));
+  mod._compile(source, fullPath);
+  return mod.exports;
+}
 
 const api = anyApi as unknown as {
   audioClips: {

@@ -5,6 +5,54 @@
 // Uses convex-test's in-memory backend — same pattern as convex/units.test.ts (see that
 // file's header comment for why `modules` is hand-built and `anyApi` is used instead of
 // the checked-in, possibly-stale convex/_generated/api.ts).
+//
+// SDK54-DOWNGRADE NOTE: since the project's Expo SDK 57->54 downgrade, jest-expo's babel
+// caller always reports `platform: "ios"` (true under both 54 and 57), but SDK 54's
+// babel-preset-expo bundles an `import-meta-transform-plugin` that now *throws* instead of
+// polyfilling `import.meta` for any non-"web" platform (Hermes safety check). convex-test's
+// published dist/index.js contains a single `import.meta.glob(...)` expression, used only
+// as a fallback default for its `modules` argument -- a branch this suite never actually
+// takes, since (like units.test.ts) `modules` is always hand-built below. But babel parses
+// the whole file at transform time regardless of which branches execute at runtime, so the
+// mere presence of that syntax anywhere in the file aborts the transform before any test
+// code runs. Since `modules` is always supplied explicitly here, it's safe to load a
+// version of convex-test with that one unreachable expression replaced by `specifiedModules`
+// and compiled with a plain CommonJS-interop transform (no Hermes-import-meta plugin
+// involved), instead of letting Jest run the real file through babel-preset-expo.
+jest.mock("convex-test", () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const fs = require("node:fs");
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const path = require("node:path");
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const Module = require("node:module");
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const babel = require("@babel/core");
+
+  const entry = require.resolve("convex-test");
+  const source = fs.readFileSync(entry, "utf8");
+  const marker = 'specifiedModules ?? import.meta.glob("../../../convex/**/*.*s")';
+  if (!source.includes(marker)) {
+    throw new Error(
+      "convex-test's dist/index.js no longer contains the expected import.meta.glob " +
+        "fallback expression -- the SDK54-DOWNGRADE NOTE workaround in " +
+        "convex/completions.test.ts needs to be re-checked against the new version.",
+    );
+  }
+  const patched = source.replace(marker, "specifiedModules");
+  const { code } = babel.transform(patched, {
+    filename: entry,
+    presets: [],
+    plugins: [require.resolve("@babel/plugin-transform-modules-commonjs")],
+    babelrc: false,
+    configFile: false,
+  });
+  const mod = new Module(entry, module);
+  mod.filename = entry;
+  mod.paths = Module._nodeModulePaths(path.dirname(entry));
+  mod._compile(code, entry);
+  return mod.exports;
+});
 
 import { convexTest } from "convex-test";
 import { anyApi } from "convex/server";
