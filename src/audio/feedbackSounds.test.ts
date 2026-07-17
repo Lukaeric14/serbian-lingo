@@ -1,4 +1,5 @@
 import { createAudioPlayer } from "expo-audio";
+import { reviveAudioSession } from "./audioSession";
 import { FeedbackSoundPlayer } from "./feedbackSounds";
 
 // Fake player object standing in for expo-audio's native AudioPlayer.
@@ -15,11 +16,24 @@ jest.mock("expo-audio", () => ({
   createAudioPlayer: jest.fn(),
 }));
 
+jest.mock("./audioSession", () => ({
+  reviveAudioSession: jest.fn(async () => {}),
+}));
+
 const mockedCreateAudioPlayer = createAudioPlayer as jest.Mock;
+const mockedReviveAudioSession = reviveAudioSession as jest.Mock;
+
+/** Lets the async recovery path (chime failure -> revive -> recreate -> replay) settle. */
+async function flushRecovery() {
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+}
 
 describe("FeedbackSoundPlayer", () => {
   beforeEach(() => {
     mockedCreateAudioPlayer.mockReset();
+    mockedReviveAudioSession.mockClear();
     mockedCreateAudioPlayer.mockImplementation(() => makeFakePlayer());
   });
 
@@ -69,12 +83,11 @@ describe("FeedbackSoundPlayer", () => {
     expect(fakePlayer.play).toHaveBeenCalledTimes(2);
   });
 
-  // --- Stale native player recovery (real-world: "Server was dead when
-  // activation request was made" — a native AudioPlayer going invalid across
-  // a JS reload or the app being backgrounded long enough for iOS to tear
-  // down the audio session) ---
+  // --- Stale native player/session recovery (the very first on-device crash
+  // was playCorrect throwing "Server was dead when activation request was
+  // made" straight into handleSubmit) ---
 
-  it("playCorrect() recreates and retries once if the cached player has gone stale", () => {
+  it("a stale chime player revives the session, recreates, and retries — without throwing", async () => {
     const player = new FeedbackSoundPlayer();
 
     player.playCorrect();
@@ -84,30 +97,36 @@ describe("FeedbackSoundPlayer", () => {
     });
 
     expect(() => player.playCorrect()).not.toThrow();
+    await flushRecovery();
 
+    expect(mockedReviveAudioSession).toHaveBeenCalled();
     expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(2);
     const freshPlayer = mockedCreateAudioPlayer.mock.results[1].value;
     expect(freshPlayer.play).toHaveBeenCalledTimes(1);
 
-    // The recreated player is what's cached now.
+    // The recreated player is cached for subsequent chimes.
     player.playCorrect();
     expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(2);
     expect(freshPlayer.play).toHaveBeenCalledTimes(2);
   });
 
-  it("playIncorrect() recreates and retries once if the cached player has gone stale", () => {
+  it("stays silent (no throw) when even the recovery attempt fails", async () => {
     const player = new FeedbackSoundPlayer();
 
     player.playIncorrect();
     const stalePlayer = mockedCreateAudioPlayer.mock.results[0].value;
-    stalePlayer.seekTo.mockImplementationOnce(() => {
-      throw new Error("Server was dead when activation request was made");
+    stalePlayer.play.mockImplementation(() => {
+      throw new Error("Session lookup failed");
+    });
+    mockedCreateAudioPlayer.mockImplementation(() => {
+      const p = makeFakePlayer();
+      p.play.mockImplementation(() => {
+        throw new Error("Session lookup failed");
+      });
+      return p;
     });
 
     expect(() => player.playIncorrect()).not.toThrow();
-
-    expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(2);
-    const freshPlayer = mockedCreateAudioPlayer.mock.results[1].value;
-    expect(freshPlayer.play).toHaveBeenCalledTimes(1);
+    await expect(flushRecovery()).resolves.not.toThrow();
   });
 });

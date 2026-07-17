@@ -11,6 +11,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import type { Doc, Id } from "../../convex/_generated/dataModel";
 import { setSelectedProfileId } from "@/lib/selected-profile";
+import { APP_REVISION } from "@/lib/appRevision";
 import { ScreenContainer } from "@/components/ui";
 import { BoltIcon, FlameIcon } from "@/components/ui/icons";
 import { colors, radii, spacing, type } from "@/design/tokens";
@@ -49,6 +50,8 @@ export default function ProfilePicker() {
           ))}
         </View>
       )}
+
+      <Text style={styles.revision}>{APP_REVISION}</Text>
     </ScreenContainer>
   );
 }
@@ -134,5 +137,10 @@ const styles = StyleSheet.create({
     fontFamily: type.body.fontFamily,
     fontSize: type.body.fontSize,
     color: colors.textMedium,
+  },
+  revision: {
+    fontFamily: type.caption.fontFamily,
+    fontSize: type.caption.fontSize,
+    color: colors.borderDark,
   },
 });

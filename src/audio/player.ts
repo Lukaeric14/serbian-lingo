@@ -8,8 +8,20 @@
 // Uses `createAudioPlayer` (the non-hook factory) rather than `useAudioPlayer`
 // because this module manages a cache of players outside of React's render
 // cycle — it's a service, not a component.
+//
+// CRASH-PROOFING (learned on Dominika's real iPhone, invisible in the
+// simulator): iOS can invalidate the native audio session or an individual
+// native player at any time (backgrounding, lock screen, call/Siri
+// interruptions, audio-focus loss). When that happens, native calls throw
+// ("Server was dead when activation request was made", "Session lookup
+// failed"). NOTHING in this module may ever let such an error escape to the
+// caller — a missed sound is a shrug, an uncaught native error is a crashed
+// lesson. Every play path: try → on failure, revive the audio session +
+// recreate the player and retry once (async) → on failure again, give up
+// silently. The next tap starts the whole ladder fresh.
 
 import { createAudioPlayer, type AudioPlayer } from "expo-audio";
+import { reviveAudioSession } from "./audioSession";
 
 export interface AudioClip {
   text: string;
@@ -39,13 +51,19 @@ export class AudioClipPlayer {
    */
   preload(clips: AudioClip[]): void {
     for (const clip of clips) {
-      const existing = this.clips.get(clip.text);
-      if (existing) {
-        existing.player.replace({ uri: clip.uri });
-        existing.uri = clip.uri;
-        continue;
+      try {
+        const existing = this.clips.get(clip.text);
+        if (existing) {
+          existing.player.replace({ uri: clip.uri });
+          existing.uri = clip.uri;
+          continue;
+        }
+        this.clips.set(clip.text, { player: createAudioPlayer({ uri: clip.uri }), uri: clip.uri });
+      } catch {
+        // A clip that failed to register just won't play until re-preloaded —
+        // never abort the rest of the batch (or the caller) over it.
+        this.clips.delete(clip.text);
       }
-      this.clips.set(clip.text, { player: createAudioPlayer({ uri: clip.uri }), uri: clip.uri });
     }
   }
 
@@ -62,47 +80,55 @@ export class AudioClipPlayer {
    * (or a different) clip stop whatever's currently playing first, then
    * restart from the beginning — never stacks overlapping playback.
    *
-   * No-ops (silently) if `text` was never preloaded, so a stray tap can't
-   * crash the app.
+   * No-ops (silently) if `text` was never preloaded, and NEVER throws —
+   * see the crash-proofing note at the top of this file.
    */
   play(text: string): void {
     const clip = this.clips.get(text);
     if (!clip) return;
 
-    // Stop any other clip that's mid-playback so plays never overlap. Best-effort:
-    // if that other native player has already gone stale, swallow and move on —
-    // this call's own job is playing `text`, not that one.
+    // Stop any other clip that's mid-playback so plays never overlap.
+    // Best-effort: a stale native player here must not fail THIS play.
     if (this.currentlyPlayingText && this.currentlyPlayingText !== text) {
       try {
         this.clips.get(this.currentlyPlayingText)?.player.pause();
       } catch {
-        // ignore — see the retry comment below for why a native player can die.
+        // ignore
       }
     }
+    this.currentlyPlayingText = text;
 
     try {
       this.replay(clip.player);
     } catch {
-      // The native player can go stale (e.g. "Server was dead when activation
-      // request was made") across a JS reload or the app being backgrounded
-      // long enough for iOS to tear down the audio session. Recreate once
-      // from the same source and retry, rather than crashing or going silent
-      // for the rest of the session.
-      const fresh = createAudioPlayer({ uri: clip.uri });
-      this.clips.set(text, { player: fresh, uri: clip.uri });
-      this.replay(fresh);
+      // Native player and/or the whole audio session has gone stale. Revive
+      // the session first (a fresh player bound to a dead session fails the
+      // same way), then recreate and retry once. Async on purpose — play()
+      // is called from sync UI handlers; a ~100ms-late recovered sound beats
+      // a crash. If recovery fails too, stay silent; the next tap retries.
+      void this.recover(text, clip.uri);
     }
-
-    this.currentlyPlayingText = text;
   }
 
-  /** Stops whatever's currently playing, if anything. */
+  private async recover(text: string, uri: string): Promise<void> {
+    try {
+      await reviveAudioSession();
+      const fresh = createAudioPlayer({ uri });
+      this.clips.set(text, { player: fresh, uri });
+      this.replay(fresh);
+    } catch {
+      // Give up on this play. Cache entry (fresh or old) stays; a later
+      // play() walks the same revive path again.
+    }
+  }
+
+  /** Stops whatever's currently playing, if anything. Never throws. */
   stop(): void {
     if (!this.currentlyPlayingText) return;
     try {
       this.clips.get(this.currentlyPlayingText)?.player.pause();
     } catch {
-      // Best-effort — see play()'s retry comment.
+      // ignore
     }
     this.currentlyPlayingText = null;
   }
@@ -115,7 +141,11 @@ export class AudioClipPlayer {
   /** Releases every cached player. Intended for teardown (e.g. tests). */
   clear(): void {
     for (const clip of this.clips.values()) {
-      clip.player.remove();
+      try {
+        clip.player.remove();
+      } catch {
+        // ignore
+      }
     }
     this.clips.clear();
     this.currentlyPlayingText = null;

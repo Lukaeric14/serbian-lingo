@@ -4,8 +4,17 @@
 // scripts/audio/generate-feedback-sounds.ts), not per-word Serbian clips fetched
 // from Convex/R2, so they get their own tiny player pair instead of going through
 // the text-keyed clip cache.
+//
+// Same crash-proofing contract as player.ts (see its header): iOS can invalidate
+// the native session/player at any time on a real device; a play call must NEVER
+// throw to its caller (this module's playCorrect was the site of the first
+// on-device crash). On failure: revive the audio session, recreate the player,
+// retry once (async); if that fails too, skip the chime silently.
 
 import { createAudioPlayer, type AudioPlayer } from "expo-audio";
+import { reviveAudioSession } from "./audioSession";
+
+type ChimeKind = "correct" | "incorrect";
 
 /**
  * Lazily creates (once) and replays the correct/incorrect chime players. A
@@ -13,13 +22,15 @@ import { createAudioPlayer, type AudioPlayer } from "expo-audio";
  * instantiable fresh per test instead of leaking a singleton across specs.
  */
 export class FeedbackSoundPlayer {
-  private correctPlayer: AudioPlayer | null = null;
-  private incorrectPlayer: AudioPlayer | null = null;
+  private players: Partial<Record<ChimeKind, AudioPlayer>> = {};
 
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  private createCorrectPlayer = (): AudioPlayer => createAudioPlayer(require("../../assets/audio/correct.wav"));
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  private createIncorrectPlayer = (): AudioPlayer => createAudioPlayer(require("../../assets/audio/incorrect.wav"));
+  private create(kind: ChimeKind): AudioPlayer {
+    return kind === "correct"
+      ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+        createAudioPlayer(require("../../assets/audio/correct.wav"))
+      : // eslint-disable-next-line @typescript-eslint/no-require-imports
+        createAudioPlayer(require("../../assets/audio/incorrect.wav"));
+  }
 
   private replay(player: AudioPlayer): void {
     player.pause();
@@ -27,43 +38,33 @@ export class FeedbackSoundPlayer {
     player.play();
   }
 
-  /**
-   * Plays `player`, recreating it once via `create` and retrying if the native
-   * side has gone stale (e.g. "Server was dead when activation request was
-   * made" — happens across a JS reload or the app being backgrounded long
-   * enough for iOS to tear down the audio session). Without this, a single
-   * stale reference would silently break the chime for the rest of the session.
-   */
-  private replayWithRetry(current: AudioPlayer, create: () => AudioPlayer, save: (p: AudioPlayer) => void): void {
+  /** Plays the chime; never throws (see header). */
+  private playChime(kind: ChimeKind): void {
     try {
-      this.replay(current);
+      const player = (this.players[kind] ??= this.create(kind));
+      this.replay(player);
     } catch {
-      const fresh = create();
-      save(fresh);
+      void this.recover(kind);
+    }
+  }
+
+  private async recover(kind: ChimeKind): Promise<void> {
+    try {
+      await reviveAudioSession();
+      const fresh = this.create(kind);
+      this.players[kind] = fresh;
       this.replay(fresh);
+    } catch {
+      // Skip this chime; the next answer walks the same revive path again.
     }
   }
 
   playCorrect(): void {
-    if (!this.correctPlayer) this.correctPlayer = this.createCorrectPlayer();
-    this.replayWithRetry(
-      this.correctPlayer,
-      this.createCorrectPlayer,
-      (p) => {
-        this.correctPlayer = p;
-      },
-    );
+    this.playChime("correct");
   }
 
   playIncorrect(): void {
-    if (!this.incorrectPlayer) this.incorrectPlayer = this.createIncorrectPlayer();
-    this.replayWithRetry(
-      this.incorrectPlayer,
-      this.createIncorrectPlayer,
-      (p) => {
-        this.incorrectPlayer = p;
-      },
-    );
+    this.playChime("incorrect");
   }
 }
 

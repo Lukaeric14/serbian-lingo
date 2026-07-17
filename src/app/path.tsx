@@ -12,6 +12,7 @@ import { PathNode } from "@/components/ui";
 import { BoltIcon, FlameIcon } from "@/components/ui/icons";
 import { colors, fonts, layout, radii, spacing, type } from "@/design/tokens";
 import { getSelectedProfileId } from "@/lib/selected-profile";
+import { APP_REVISION } from "@/lib/appRevision";
 import { api } from "../../convex/_generated/api";
 import type { Id } from "../../convex/_generated/dataModel";
 
@@ -87,6 +88,7 @@ export default function PathScreen() {
             {completedLessons}/{totalLessons}
           </Text>
         </View>
+        <Text style={styles.revision}>{APP_REVISION}</Text>
       </View>
 
       {path.map((unit) => (
@@ -166,6 +168,12 @@ const styles = StyleSheet.create({
     fontFamily: fonts.extraBold,
     fontSize: type.title.fontSize,
     color: colors.textDark,
+  },
+  revision: {
+    marginLeft: "auto",
+    fontFamily: type.caption.fontFamily,
+    fontSize: type.caption.fontSize,
+    color: colors.borderDark,
   },
   unitBlock: {
     marginBottom: spacing.lg,

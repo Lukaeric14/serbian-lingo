@@ -1,4 +1,5 @@
 import { createAudioPlayer } from "expo-audio";
+import { reviveAudioSession } from "./audioSession";
 import { AudioClipPlayer } from "./player";
 
 // Fake player object standing in for expo-audio's native AudioPlayer.
@@ -25,11 +26,24 @@ jest.mock("expo-audio", () => ({
   createAudioPlayer: jest.fn(),
 }));
 
+jest.mock("./audioSession", () => ({
+  reviveAudioSession: jest.fn(async () => {}),
+}));
+
 const mockedCreateAudioPlayer = createAudioPlayer as jest.Mock;
+const mockedReviveAudioSession = reviveAudioSession as jest.Mock;
+
+/** Lets the async recovery path (play failure -> revive -> recreate -> replay) settle. */
+async function flushRecovery() {
+  await Promise.resolve();
+  await Promise.resolve();
+  await Promise.resolve();
+}
 
 describe("AudioClipPlayer", () => {
   beforeEach(() => {
     mockedCreateAudioPlayer.mockReset();
+    mockedReviveAudioSession.mockClear();
     // Each call to createAudioPlayer returns a fresh fake player tied to the source uri.
     mockedCreateAudioPlayer.mockImplementation((source: { uri: string }) =>
       makeFakePlayer(source.uri),
@@ -62,6 +76,25 @@ describe("AudioClipPlayer", () => {
 
     // Still only one underlying player created for "zdravo".
     expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(1);
+  });
+
+  it("preload survives a native failure on one clip and still registers the rest", () => {
+    mockedCreateAudioPlayer
+      .mockImplementationOnce(() => {
+        throw new Error("Server was dead when activation request was made");
+      })
+      .mockImplementation((source: { uri: string }) => makeFakePlayer(source.uri));
+    const player = new AudioClipPlayer();
+
+    expect(() =>
+      player.preload([
+        { text: "zdravo", uri: "file://zdravo.mp3" },
+        { text: "hvala", uri: "file://hvala.mp3" },
+      ]),
+    ).not.toThrow();
+
+    expect(player.isPreloaded("zdravo")).toBe(false); // the one that failed
+    expect(player.isPreloaded("hvala")).toBe(true);
   });
 
   it("play() triggers playback for the right clip", () => {
@@ -154,32 +187,54 @@ describe("AudioClipPlayer", () => {
     expect(player.isPreloaded("zdravo")).toBe(false);
   });
 
-  // --- Stale native player recovery (real-world: "Server was dead when
-  // activation request was made" — a native AudioPlayer going invalid across
-  // a JS reload or the app being backgrounded long enough for iOS to tear
-  // down the audio session) ---
+  // --- Stale native player/session recovery (real-world device failures:
+  // "Server was dead when activation request was made", "Session lookup
+  // failed" — the native session dies across backgrounding, lock screen, or
+  // call/Siri interruptions) ---
 
-  it("play() recreates the player and retries once if the cached player has gone stale", () => {
+  it("play() on a stale player revives the audio session, recreates the player, and retries", async () => {
     const player = new AudioClipPlayer();
     player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
-    const staleFakePlayer = mockedCreateAudioPlayer.mock.results[0].value;
-    staleFakePlayer.play.mockImplementationOnce(() => {
-      throw new Error("Server was dead when activation request was made");
+    const stalePlayer = mockedCreateAudioPlayer.mock.results[0].value;
+    stalePlayer.play.mockImplementationOnce(() => {
+      throw new Error("Session lookup failed");
     });
 
     expect(() => player.play("zdravo")).not.toThrow();
+    await flushRecovery();
 
-    // A fresh player was created from the same uri and used to actually play.
+    // The session was revived BEFORE the fresh player was created — a fresh
+    // player bound to a dead session fails identically otherwise.
+    expect(mockedReviveAudioSession).toHaveBeenCalled();
     expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(2);
     expect(mockedCreateAudioPlayer).toHaveBeenNthCalledWith(2, { uri: "file://zdravo.mp3" });
-    const freshFakePlayer = mockedCreateAudioPlayer.mock.results[1].value;
-    expect(freshFakePlayer.play).toHaveBeenCalledTimes(1);
+    const freshPlayer = mockedCreateAudioPlayer.mock.results[1].value;
+    expect(freshPlayer.play).toHaveBeenCalledTimes(1);
 
-    // The recreated player is what's now cached — a subsequent play() reuses it,
-    // not the stale one.
+    // The recreated player is what's cached — a later play() reuses it.
     player.play("zdravo");
     expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(2);
-    expect(freshFakePlayer.play).toHaveBeenCalledTimes(2);
+    expect(freshPlayer.play).toHaveBeenCalledTimes(2);
+  });
+
+  it("play() stays silent (no throw, no crash) when even the recovery attempt fails", async () => {
+    const player = new AudioClipPlayer();
+    player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
+    const stalePlayer = mockedCreateAudioPlayer.mock.results[0].value;
+    stalePlayer.play.mockImplementation(() => {
+      throw new Error("Session lookup failed");
+    });
+    // Recovery's recreated player is stale too.
+    mockedCreateAudioPlayer.mockImplementation(() => {
+      const p = makeFakePlayer("file://zdravo.mp3");
+      p.play.mockImplementation(() => {
+        throw new Error("Session lookup failed");
+      });
+      return p;
+    });
+
+    expect(() => player.play("zdravo")).not.toThrow();
+    await expect(flushRecovery()).resolves.not.toThrow();
   });
 
   it("play() swallows a stale error from the PREVIOUSLY playing clip without failing the new one", () => {
