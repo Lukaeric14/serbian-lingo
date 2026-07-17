@@ -16,21 +16,10 @@ export class FeedbackSoundPlayer {
   private correctPlayer: AudioPlayer | null = null;
   private incorrectPlayer: AudioPlayer | null = null;
 
-  private getCorrectPlayer(): AudioPlayer {
-    if (!this.correctPlayer) {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      this.correctPlayer = createAudioPlayer(require("../../assets/audio/correct.wav"));
-    }
-    return this.correctPlayer;
-  }
-
-  private getIncorrectPlayer(): AudioPlayer {
-    if (!this.incorrectPlayer) {
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      this.incorrectPlayer = createAudioPlayer(require("../../assets/audio/incorrect.wav"));
-    }
-    return this.incorrectPlayer;
-  }
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  private createCorrectPlayer = (): AudioPlayer => createAudioPlayer(require("../../assets/audio/correct.wav"));
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  private createIncorrectPlayer = (): AudioPlayer => createAudioPlayer(require("../../assets/audio/incorrect.wav"));
 
   private replay(player: AudioPlayer): void {
     player.pause();
@@ -38,12 +27,43 @@ export class FeedbackSoundPlayer {
     player.play();
   }
 
+  /**
+   * Plays `player`, recreating it once via `create` and retrying if the native
+   * side has gone stale (e.g. "Server was dead when activation request was
+   * made" — happens across a JS reload or the app being backgrounded long
+   * enough for iOS to tear down the audio session). Without this, a single
+   * stale reference would silently break the chime for the rest of the session.
+   */
+  private replayWithRetry(current: AudioPlayer, create: () => AudioPlayer, save: (p: AudioPlayer) => void): void {
+    try {
+      this.replay(current);
+    } catch {
+      const fresh = create();
+      save(fresh);
+      this.replay(fresh);
+    }
+  }
+
   playCorrect(): void {
-    this.replay(this.getCorrectPlayer());
+    if (!this.correctPlayer) this.correctPlayer = this.createCorrectPlayer();
+    this.replayWithRetry(
+      this.correctPlayer,
+      this.createCorrectPlayer,
+      (p) => {
+        this.correctPlayer = p;
+      },
+    );
   }
 
   playIncorrect(): void {
-    this.replay(this.getIncorrectPlayer());
+    if (!this.incorrectPlayer) this.incorrectPlayer = this.createIncorrectPlayer();
+    this.replayWithRetry(
+      this.incorrectPlayer,
+      this.createIncorrectPlayer,
+      (p) => {
+        this.incorrectPlayer = p;
+      },
+    );
   }
 }
 

@@ -153,4 +153,63 @@ describe("AudioClipPlayer", () => {
     expect(hvalaPlayer.remove).toHaveBeenCalled();
     expect(player.isPreloaded("zdravo")).toBe(false);
   });
+
+  // --- Stale native player recovery (real-world: "Server was dead when
+  // activation request was made" — a native AudioPlayer going invalid across
+  // a JS reload or the app being backgrounded long enough for iOS to tear
+  // down the audio session) ---
+
+  it("play() recreates the player and retries once if the cached player has gone stale", () => {
+    const player = new AudioClipPlayer();
+    player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
+    const staleFakePlayer = mockedCreateAudioPlayer.mock.results[0].value;
+    staleFakePlayer.play.mockImplementationOnce(() => {
+      throw new Error("Server was dead when activation request was made");
+    });
+
+    expect(() => player.play("zdravo")).not.toThrow();
+
+    // A fresh player was created from the same uri and used to actually play.
+    expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(2);
+    expect(mockedCreateAudioPlayer).toHaveBeenNthCalledWith(2, { uri: "file://zdravo.mp3" });
+    const freshFakePlayer = mockedCreateAudioPlayer.mock.results[1].value;
+    expect(freshFakePlayer.play).toHaveBeenCalledTimes(1);
+
+    // The recreated player is what's now cached — a subsequent play() reuses it,
+    // not the stale one.
+    player.play("zdravo");
+    expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(2);
+    expect(freshFakePlayer.play).toHaveBeenCalledTimes(2);
+  });
+
+  it("play() swallows a stale error from the PREVIOUSLY playing clip without failing the new one", () => {
+    const player = new AudioClipPlayer();
+    player.preload([
+      { text: "zdravo", uri: "file://zdravo.mp3" },
+      { text: "hvala", uri: "file://hvala.mp3" },
+    ]);
+    const zdravoPlayer = mockedCreateAudioPlayer.mock.results[0].value;
+    const hvalaPlayer = mockedCreateAudioPlayer.mock.results[1].value;
+
+    player.play("zdravo");
+    zdravoPlayer.pause.mockImplementationOnce(() => {
+      throw new Error("Server was dead when activation request was made");
+    });
+
+    expect(() => player.play("hvala")).not.toThrow();
+    expect(hvalaPlayer.play).toHaveBeenCalledTimes(1);
+  });
+
+  it("stop() does not throw if the currently-playing clip's native player has gone stale", () => {
+    const player = new AudioClipPlayer();
+    player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
+    const fakePlayer = mockedCreateAudioPlayer.mock.results[0].value;
+
+    player.play("zdravo");
+    fakePlayer.pause.mockImplementationOnce(() => {
+      throw new Error("Server was dead when activation request was made");
+    });
+
+    expect(() => player.stop()).not.toThrow();
+  });
 });

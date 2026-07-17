@@ -68,4 +68,46 @@ describe("FeedbackSoundPlayer", () => {
     expect(fakePlayer.seekTo).toHaveBeenCalledTimes(2);
     expect(fakePlayer.play).toHaveBeenCalledTimes(2);
   });
+
+  // --- Stale native player recovery (real-world: "Server was dead when
+  // activation request was made" — a native AudioPlayer going invalid across
+  // a JS reload or the app being backgrounded long enough for iOS to tear
+  // down the audio session) ---
+
+  it("playCorrect() recreates and retries once if the cached player has gone stale", () => {
+    const player = new FeedbackSoundPlayer();
+
+    player.playCorrect();
+    const stalePlayer = mockedCreateAudioPlayer.mock.results[0].value;
+    stalePlayer.play.mockImplementationOnce(() => {
+      throw new Error("Server was dead when activation request was made");
+    });
+
+    expect(() => player.playCorrect()).not.toThrow();
+
+    expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(2);
+    const freshPlayer = mockedCreateAudioPlayer.mock.results[1].value;
+    expect(freshPlayer.play).toHaveBeenCalledTimes(1);
+
+    // The recreated player is what's cached now.
+    player.playCorrect();
+    expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(2);
+    expect(freshPlayer.play).toHaveBeenCalledTimes(2);
+  });
+
+  it("playIncorrect() recreates and retries once if the cached player has gone stale", () => {
+    const player = new FeedbackSoundPlayer();
+
+    player.playIncorrect();
+    const stalePlayer = mockedCreateAudioPlayer.mock.results[0].value;
+    stalePlayer.seekTo.mockImplementationOnce(() => {
+      throw new Error("Server was dead when activation request was made");
+    });
+
+    expect(() => player.playIncorrect()).not.toThrow();
+
+    expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(2);
+    const freshPlayer = mockedCreateAudioPlayer.mock.results[1].value;
+    expect(freshPlayer.play).toHaveBeenCalledTimes(1);
+  });
 });
