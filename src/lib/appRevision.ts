@@ -4,4 +4,4 @@
 // sees, instead of guessing whether a reload actually happened. (Expo Go only
 // picks up new code on a full app restart — fast refresh over the tunnel is
 // unreliable, which burned us repeatedly during the audio-crash saga.)
-export const APP_REVISION = "r6";
+export const APP_REVISION = "r7";

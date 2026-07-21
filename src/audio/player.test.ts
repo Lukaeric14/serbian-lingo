@@ -30,6 +30,12 @@ jest.mock("./audioSession", () => ({
   reviveAudioSession: jest.fn(async () => {}),
 }));
 
+// Identity resolver: no real filesystem in unit tests — preload's disk-cache
+// behavior is covered by clipCache.test.ts; here every url "resolves" to itself.
+jest.mock("./clipCache", () => ({
+  ensureAllDownloaded: jest.fn(async (urls: string[]) => new Map(urls.map((u) => [u, u]))),
+}));
+
 const mockedCreateAudioPlayer = createAudioPlayer as jest.Mock;
 const mockedReviveAudioSession = reviveAudioSession as jest.Mock;
 
@@ -50,10 +56,10 @@ describe("AudioClipPlayer", () => {
     );
   });
 
-  it("preload registers all clips as players, one per text", () => {
+  it("preload registers all clips as players, one per text", async () => {
     const player = new AudioClipPlayer();
 
-    player.preload([
+    await player.preload([
       { text: "zdravo", uri: "file://zdravo.mp3" },
       { text: "hvala", uri: "file://hvala.mp3" },
     ]);
@@ -66,19 +72,19 @@ describe("AudioClipPlayer", () => {
     expect(player.isPreloaded("nonexistent")).toBe(false);
   });
 
-  it("preloading the same text twice replaces the source instead of creating a duplicate player", () => {
+  it("preloading the same text twice replaces the source instead of creating a duplicate player", async () => {
     const player = new AudioClipPlayer();
 
-    player.preload([{ text: "zdravo", uri: "file://zdravo-v1.mp3" }]);
+    await player.preload([{ text: "zdravo", uri: "file://zdravo-v1.mp3" }]);
     expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(1);
 
-    player.preload([{ text: "zdravo", uri: "file://zdravo-v2.mp3" }]);
+    await player.preload([{ text: "zdravo", uri: "file://zdravo-v2.mp3" }]);
 
     // Still only one underlying player created for "zdravo".
     expect(mockedCreateAudioPlayer).toHaveBeenCalledTimes(1);
   });
 
-  it("preload survives a native failure on one clip and still registers the rest", () => {
+  it("preload survives a native failure on one clip and still registers the rest", async () => {
     mockedCreateAudioPlayer
       .mockImplementationOnce(() => {
         throw new Error("Server was dead when activation request was made");
@@ -86,20 +92,20 @@ describe("AudioClipPlayer", () => {
       .mockImplementation((source: { uri: string }) => makeFakePlayer(source.uri));
     const player = new AudioClipPlayer();
 
-    expect(() =>
+    await expect(
       player.preload([
         { text: "zdravo", uri: "file://zdravo.mp3" },
         { text: "hvala", uri: "file://hvala.mp3" },
       ]),
-    ).not.toThrow();
+    ).resolves.not.toThrow();
 
     expect(player.isPreloaded("zdravo")).toBe(false); // the one that failed
     expect(player.isPreloaded("hvala")).toBe(true);
   });
 
-  it("play() triggers playback for the right clip", () => {
+  it("play() triggers playback for the right clip", async () => {
     const player = new AudioClipPlayer();
-    player.preload([
+    await player.preload([
       { text: "zdravo", uri: "file://zdravo.mp3" },
       { text: "hvala", uri: "file://hvala.mp3" },
     ]);
@@ -113,16 +119,16 @@ describe("AudioClipPlayer", () => {
     expect(zdravoPlayer.play).not.toHaveBeenCalled();
   });
 
-  it("play() on an unregistered text is a silent no-op, not a throw", () => {
+  it("play() on an unregistered text is a silent no-op, not a throw", async () => {
     const player = new AudioClipPlayer();
-    player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
+    await player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
 
     expect(() => player.play("never-preloaded")).not.toThrow();
   });
 
-  it("rapid repeated play() calls on the same text restart rather than stack", () => {
+  it("rapid repeated play() calls on the same text restart rather than stack", async () => {
     const player = new AudioClipPlayer();
-    player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
+    await player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
     const fakePlayer = mockedCreateAudioPlayer.mock.results[0].value;
 
     player.play("zdravo");
@@ -138,9 +144,9 @@ describe("AudioClipPlayer", () => {
     expect(fakePlayer.pause.mock.calls.length).toBeGreaterThanOrEqual(3);
   });
 
-  it("playing a new clip stops the previously playing clip instead of overlapping", () => {
+  it("playing a new clip stops the previously playing clip instead of overlapping", async () => {
     const player = new AudioClipPlayer();
-    player.preload([
+    await player.preload([
       { text: "zdravo", uri: "file://zdravo.mp3" },
       { text: "hvala", uri: "file://hvala.mp3" },
     ]);
@@ -157,9 +163,9 @@ describe("AudioClipPlayer", () => {
     expect(hvalaPlayer.play).toHaveBeenCalledTimes(1);
   });
 
-  it("stop() pauses the currently playing clip and clears playing state", () => {
+  it("stop() pauses the currently playing clip and clears playing state", async () => {
     const player = new AudioClipPlayer();
-    player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
+    await player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
     const fakePlayer = mockedCreateAudioPlayer.mock.results[0].value;
 
     player.play("zdravo");
@@ -171,9 +177,9 @@ describe("AudioClipPlayer", () => {
     expect(() => player.stop()).not.toThrow();
   });
 
-  it("clear() removes every cached player and resets state", () => {
+  it("clear() removes every cached player and resets state", async () => {
     const player = new AudioClipPlayer();
-    player.preload([
+    await player.preload([
       { text: "zdravo", uri: "file://zdravo.mp3" },
       { text: "hvala", uri: "file://hvala.mp3" },
     ]);
@@ -194,7 +200,7 @@ describe("AudioClipPlayer", () => {
 
   it("play() on a stale player revives the audio session, recreates the player, and retries", async () => {
     const player = new AudioClipPlayer();
-    player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
+    await player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
     const stalePlayer = mockedCreateAudioPlayer.mock.results[0].value;
     stalePlayer.play.mockImplementationOnce(() => {
       throw new Error("Session lookup failed");
@@ -219,7 +225,7 @@ describe("AudioClipPlayer", () => {
 
   it("play() stays silent (no throw, no crash) when even the recovery attempt fails", async () => {
     const player = new AudioClipPlayer();
-    player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
+    await player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
     const stalePlayer = mockedCreateAudioPlayer.mock.results[0].value;
     stalePlayer.play.mockImplementation(() => {
       throw new Error("Session lookup failed");
@@ -237,9 +243,9 @@ describe("AudioClipPlayer", () => {
     await expect(flushRecovery()).resolves.not.toThrow();
   });
 
-  it("play() swallows a stale error from the PREVIOUSLY playing clip without failing the new one", () => {
+  it("play() swallows a stale error from the PREVIOUSLY playing clip without failing the new one", async () => {
     const player = new AudioClipPlayer();
-    player.preload([
+    await player.preload([
       { text: "zdravo", uri: "file://zdravo.mp3" },
       { text: "hvala", uri: "file://hvala.mp3" },
     ]);
@@ -255,9 +261,9 @@ describe("AudioClipPlayer", () => {
     expect(hvalaPlayer.play).toHaveBeenCalledTimes(1);
   });
 
-  it("stop() does not throw if the currently-playing clip's native player has gone stale", () => {
+  it("stop() does not throw if the currently-playing clip's native player has gone stale", async () => {
     const player = new AudioClipPlayer();
-    player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
+    await player.preload([{ text: "zdravo", uri: "file://zdravo.mp3" }]);
     const fakePlayer = mockedCreateAudioPlayer.mock.results[0].value;
 
     player.play("zdravo");

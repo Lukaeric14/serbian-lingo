@@ -22,6 +22,7 @@
 
 import { createAudioPlayer, type AudioPlayer } from "expo-audio";
 import { reviveAudioSession } from "./audioSession";
+import { ensureAllDownloaded } from "./clipCache";
 
 export interface AudioClip {
   text: string;
@@ -44,21 +45,37 @@ export class AudioClipPlayer {
   private currentlyPlayingText: string | null = null;
 
   /**
-   * Registers clips for playback, creating (or replacing) a cached player
-   * for each. Safe to call multiple times / incrementally as new lessons
-   * come into view — already-registered texts get their source swapped in
-   * place rather than leaking a duplicate player.
+   * Registers clips for playback: resolves each remote URL to a local
+   * disk-cached file first (downloading the ones not yet cached — see
+   * clipCache.ts for why remote-streaming players were a disaster), then
+   * creates (or re-points) one player per text. Safe to call multiple
+   * times / incrementally as new lessons come into view.
+   *
+   * `resolveAll` is injectable for tests; defaults to the real disk cache.
    */
-  preload(clips: AudioClip[]): void {
+  async preload(
+    clips: AudioClip[],
+    resolveAll: (urls: string[]) => Promise<Map<string, string>> = ensureAllDownloaded,
+  ): Promise<void> {
+    let resolved: Map<string, string>;
+    try {
+      resolved = await resolveAll(clips.map((c) => c.uri));
+    } catch {
+      resolved = new Map(); // fall back to remote uris below
+    }
+
     for (const clip of clips) {
+      const uri = resolved.get(clip.uri) ?? clip.uri;
       try {
         const existing = this.clips.get(clip.text);
         if (existing) {
-          existing.player.replace({ uri: clip.uri });
-          existing.uri = clip.uri;
+          if (existing.uri !== uri) {
+            existing.player.replace({ uri });
+            existing.uri = uri;
+          }
           continue;
         }
-        this.clips.set(clip.text, { player: createAudioPlayer({ uri: clip.uri }), uri: clip.uri });
+        this.clips.set(clip.text, { player: createAudioPlayer({ uri }), uri });
       } catch {
         // A clip that failed to register just won't play until re-preloaded —
         // never abort the rest of the batch (or the caller) over it.
@@ -155,8 +172,8 @@ export class AudioClipPlayer {
 /** App-wide singleton — one shared clip cache, per SPEC.md §5. */
 export const audioClipPlayer = new AudioClipPlayer();
 
-export function preload(clips: AudioClip[]): void {
-  audioClipPlayer.preload(clips);
+export function preload(clips: AudioClip[]): Promise<void> {
+  return audioClipPlayer.preload(clips);
 }
 
 export function play(text: string): void {

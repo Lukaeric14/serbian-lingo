@@ -20,6 +20,7 @@ import { api } from "../../../convex/_generated/api";
 import type { Id } from "../../../convex/_generated/dataModel";
 import { getSelectedProfileId } from "@/lib/selected-profile";
 import { preload } from "@/audio/player";
+import { audioTextsForChallenges } from "@/audio/lessonAudioTexts";
 import { playCorrectSound, playIncorrectSound } from "@/audio/feedbackSounds";
 import { shuffle } from "@/lib/shuffle";
 import { LessonQueue } from "@/engine/queue";
@@ -127,14 +128,27 @@ export default function LessonHost() {
 
   // Every clip's playable URL — src/audio/player.ts only plays a text it was
   // preloaded with, so this must resolve before the first challenge (whose
-  // autoplay fires on mount) is allowed to render.
+  // autoplay fires on mount) is allowed to render. Preload is scoped to THIS
+  // lesson's renderable texts and awaited: preload() downloads any not-yet-
+  // cached files to disk first (~1-2s once, instant on revisits), so the
+  // first tap plays immediately instead of stalling behind a pile of
+  // remote-streaming players (the "first word takes forever" bug).
   const audioClips = useQuery(api.audioClips.listAll, {});
   const [audioPreloaded, setAudioPreloaded] = useState(false);
   useEffect(() => {
-    if (audioClips === undefined) return;
-    preload(audioClips.map((c) => ({ text: c.text, uri: c.url })));
-    setAudioPreloaded(true);
-  }, [audioClips]);
+    if (audioClips === undefined || challenges === undefined) return;
+    let cancelled = false;
+    const needed = audioTextsForChallenges(challenges);
+    const lessonClips = audioClips
+      .filter((c) => needed.has(c.text))
+      .map((c) => ({ text: c.text, uri: c.url }));
+    preload(lessonClips).then(() => {
+      if (!cancelled) setAudioPreloaded(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [audioClips, challenges]);
 
   const recordCompletion = useMutation(api.completions.recordCompletion);
 
